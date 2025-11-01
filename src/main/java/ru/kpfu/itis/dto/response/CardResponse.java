@@ -1,24 +1,20 @@
-package ru.kpfu.itis.entities;
+package ru.kpfu.itis.dto.response;
 
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Card {
-    
+public class CardResponse {
+    private boolean sucsess;
+    private String message;
     private UUID id;
     private UUID userId;
-    private UUID cardProductId;
     private String plasticName;
     private String expDate;
-    private int cvv;
-    private String contractName;
+    private String cardName;
+    private String contactName;
 }
-
