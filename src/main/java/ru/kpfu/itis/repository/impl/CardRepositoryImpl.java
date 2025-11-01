@@ -2,8 +2,11 @@ package ru.kpfu.itis.repository.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import ru.kpfu.itis.entities.Card;
+import ru.kpfu.itis.entities.CardProduct;
 import ru.kpfu.itis.repository.CardRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
