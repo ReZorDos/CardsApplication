@@ -13,4 +13,8 @@ public class CreateCardRequest {
     private UUID userId;
     private UUID cardProductId;
     private String contractName;
+    private String plasticName;
+    private String expDate;
+    private int cvv;
+
 }
