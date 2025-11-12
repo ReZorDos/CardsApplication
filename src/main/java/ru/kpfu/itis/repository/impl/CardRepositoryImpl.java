@@ -6,8 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import ru.kpfu.itis.entities.Card;
-import ru.kpfu.itis.entities.CardProduct;
+import ru.kpfu.itis.model.Card;
+import ru.kpfu.itis.model.CardProduct;
 import ru.kpfu.itis.repository.CardRepository;
 
 import java.sql.PreparedStatement;
@@ -20,9 +20,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CardRepositoryImpl implements CardRepository {
 
-    private JdbcTemplate jdbcTemplate;
-    private CardRowMapper cardRowMapper = new CardRowMapper();
-    private CardProductRowMapper cardProductRowMapper = new CardProductRowMapper();
+    private final JdbcTemplate jdbcTemplate;
+    private final CardRowMapper cardRowMapper = new CardRowMapper();
+    private final CardProductRowMapper cardProductRowMapper = new CardProductRowMapper();
     private static final String SQL_GET_CARD_BY_ID = "select * from card where id = ?";
     private static final String SQL_GET_CARD_BY_CARD_ID_AND_USER_ID = "select * from card where card_id = ? and user_id = ?";
     private static final String SQL_ALL_CARD_PRODUCT = "select * from card_product";
@@ -35,7 +35,7 @@ public class CardRepositoryImpl implements CardRepository {
 
 
     @Override
-    public Optional<Card> getById(UUID cardId) {
+    public Optional<Card> findById(UUID cardId) {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_CARD_BY_ID, cardRowMapper, cardId));
         } catch (EmptyResultDataAccessException e) {
@@ -44,7 +44,7 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public Optional<Card> getCardByCardIdAndUserId(UUID cardId, UUID user_id) {
+    public Optional<Card> findCardByCardIdAndUserId(UUID cardId, UUID user_id) {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_CARD_BY_CARD_ID_AND_USER_ID, cardRowMapper, cardId, user_id));
         } catch (EmptyResultDataAccessException e) {
@@ -53,7 +53,7 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public List<CardProduct> getAllCardProducts() {
+    public List<CardProduct> findAllCardProducts() {
         return jdbcTemplate.query(SQL_ALL_CARD_PRODUCT, cardProductRowMapper);
     }
 
@@ -71,7 +71,7 @@ public class CardRepositoryImpl implements CardRepository {
             return ps;
         }, keyHolder);
         UUID cardId = (UUID) keyHolder.getKeys().get("id");
-        return getById(cardId).get();
+        return findById(cardId).get();
     }
 
     @Override
@@ -80,12 +80,12 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public Card getAccountStatementOfCard(UUID cardId) {
+    public Card findAccountStatementOfCard(UUID cardId) {
         return null;
     }
 
     @Override
-    public String getContractName(UUID cardId) {
+    public String findContractName(UUID cardId) {
         return "";
     }
 
