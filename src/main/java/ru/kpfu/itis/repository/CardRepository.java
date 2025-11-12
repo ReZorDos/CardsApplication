@@ -9,12 +9,21 @@ import java.util.UUID;
 
 public interface CardRepository {
 
-    Optional<Card> getCardById(UUID cardId);
-    List<CardProduct> getAllCardProduct();
-    void saveCardOfUser(Card card);
+    Optional<Card> getById(UUID cardId);
+
+    Optional<Card> getCardByCardIdAndUserId(UUID cardId, UUID user_id);
+
+    List<CardProduct> getAllCardProducts();
+
+    Card saveCardOfUser(Card card);
+
     boolean closeCardOfUser(UUID cardId);
-    Card getInformationOfCard(UUID cardId);
-    String getContractName(String cardName);
-    List<Card> getCardsByUserId(UUID userId);
+
+    //FIXME: понять последние 2 метода
+    //получение выписки по карте. Просто отдаем карту другому микросервису
+    Card getAccountStatementOfCard(UUID cardId);
+
+    //получение счета по номеру карты
+    String getContractName(UUID cardId);
 
 }
