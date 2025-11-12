@@ -20,7 +20,9 @@ public class Card {
     private String expDate;
     private int cvv;
     private String contractName;
+
     //TODO: спросить что есть документ у documents
+    //TODO: получать эти данные из другого микросервиса
     private String openDocument;
     private String closeDocument;
 }

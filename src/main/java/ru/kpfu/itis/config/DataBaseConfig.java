@@ -1,21 +1,24 @@
 package ru.kpfu.itis.config;
 
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import ru.kpfu.itis.util.PropertyReader;
 
 import javax.sql.DataSource;
 
 @UtilityClass
 public class DataBaseConfig {
 
-    public final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource());
+    @Getter
+    private final JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource());
 
     private DataSource dataSource() {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/oris-fall-2025");
-        dataSource.setUser("postgres");
-        dataSource.setPassword("12345");
+        dataSource.setUrl(PropertyReader.getProperties("DB_URL"));
+        dataSource.setUser(PropertyReader.getProperties("DB_USER"));
+        dataSource.setPassword(PropertyReader.getProperties("DB_PASSWORD"));
         return dataSource;
     }
 

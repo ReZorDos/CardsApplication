@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FieldErrorDto {
 
+    private boolean success;
     private String error;
 
 }
