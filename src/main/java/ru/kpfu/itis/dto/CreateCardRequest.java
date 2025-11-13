@@ -11,16 +11,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CardDto {
+public class CreateCardRequest {
 
     private UUID userId;
     private UUID cardProductId;
-    private String plasticName;
-    private String expDate;
     private String contractName;
     private String cardName;
     private String openDocument;
     private String closeDocument;
-    private boolean closeFlag;
 
 }

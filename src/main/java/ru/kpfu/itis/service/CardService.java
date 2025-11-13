@@ -1,6 +1,7 @@
 package ru.kpfu.itis.service;
 
 import ru.kpfu.itis.dto.CardDto;
+import ru.kpfu.itis.dto.CreateCardRequest;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.model.CardProduct;
 
@@ -10,16 +11,14 @@ import java.util.UUID;
 
 public interface CardService {
 
-    Optional<CardDto> getCardByCardIdAndUserId(UUID cardId, UUID userId);
+    Optional<CardDto> getCardByCardId(UUID cardId);
 
     List<CardProduct> getAllCardProduct();
 
     CardDto saveCard(Card card);
 
-    boolean closeCard(UUID cardId);
+    boolean closeCard(UUID cardId, String closeDocument);
 
-    Card getAccountStatement(UUID cardId);
-
-    String getContractName();
+    Card convertCreateRequestToCardEntity(CreateCardRequest cardRequest);
 
 }

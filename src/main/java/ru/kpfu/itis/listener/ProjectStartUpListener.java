@@ -21,6 +21,7 @@ public class ProjectStartUpListener implements ServletContextListener {
         CardRepository cardRepository = new CardRepositoryImpl(DataBaseConfig.getJdbcTemplate());
         CardMapper cardMapper = new CardMapper();
         CardService cardService = new CardServiceImpl(cardRepository, cardMapper);
+        context.setAttribute("cardService", cardService);
 
 
     }

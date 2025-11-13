@@ -15,7 +15,7 @@ public class JsonParser {
 
     public static <T> T readRequestBody(HttpServletRequest request, Class<T> clazz) {
         try {
-            return mapper.convertValue(request.getReader(), clazz);
+            return mapper.readValue(request.getReader(), clazz);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

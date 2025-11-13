@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FieldErrorDto {
+public class ApiResponse<T> {
 
-    private boolean success;
-    private String error;
+    private String message;
+    private T data;
 
 }
