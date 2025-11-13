@@ -24,14 +24,13 @@ public class CardRepositoryImpl implements CardRepository {
     private final CardRowMapper cardRowMapper = new CardRowMapper();
     private final CardProductRowMapper cardProductRowMapper = new CardProductRowMapper();
     private static final String SQL_GET_CARD_BY_ID = "select * from card where id = ?";
-    private static final String SQL_GET_CARD_BY_CARD_ID_AND_USER_ID = "select * from card where card_id = ? and user_id = ?";
     private static final String SQL_ALL_CARD_PRODUCT = "select * from card_product";
     private static final String SQL_SAVE_CARD = """
             insert into card 
-            (user_id, card_product_id, plastic_name, exp_date, cvv, contract_name)
-            values (?, ?, ?, ?, ?, ?)
+            (user_id, card_product_id, plastic_name, exp_date, cvv, contract_name, card_name, open_document, close_document)
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
-    private static final String SQL_UPDATE_DATE_EXPENSE = "update category set exp_date = ? where id = ?";
+    private static final String SQL_UPDATE_DATE_EXPENSE = "update card set close_flag = true, close_document = ? where id = ?";
 
 
     @Override
@@ -44,17 +43,12 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public Optional<Card> findCardByCardIdAndUserId(UUID cardId, UUID user_id) {
-        try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_CARD_BY_CARD_ID_AND_USER_ID, cardRowMapper, cardId, user_id));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
     public List<CardProduct> findAllCardProducts() {
-        return jdbcTemplate.query(SQL_ALL_CARD_PRODUCT, cardProductRowMapper);
+        try {
+            return jdbcTemplate.query(SQL_ALL_CARD_PRODUCT, cardProductRowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            return List.of();
+        }
     }
 
     @Override
@@ -68,6 +62,9 @@ public class CardRepositoryImpl implements CardRepository {
             ps.setObject(4, card.getExpDate());
             ps.setObject(5, card.getCvv());
             ps.setObject(6, card.getContractName());
+            ps.setObject(7, card.getCardName());
+            ps.setObject(8, card.getOpenDocument());
+            ps.setObject(9, card.getCloseDocument());
             return ps;
         }, keyHolder);
         UUID cardId = (UUID) keyHolder.getKeys().get("id");
@@ -75,18 +72,8 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public boolean closeCardOfUser(UUID cardId) {
-        return jdbcTemplate.update(SQL_UPDATE_DATE_EXPENSE, cardId) == 1;
-    }
-
-    @Override
-    public Card findAccountStatementOfCard(UUID cardId) {
-        return null;
-    }
-
-    @Override
-    public String findContractName(UUID cardId) {
-        return "";
+    public boolean closeCardOfUser(UUID cardId, String closeDocument) {
+        return jdbcTemplate.update(SQL_UPDATE_DATE_EXPENSE, closeDocument, cardId) == 1;
     }
 
     private static final class CardRowMapper implements RowMapper<Card> {
@@ -101,6 +88,10 @@ public class CardRepositoryImpl implements CardRepository {
                     .expDate(rs.getString("exp_date"))
                     .cvv(rs.getInt("cvv"))
                     .contractName(rs.getString("contract_name"))
+                    .cardName(rs.getString("card_name"))
+                    .openDocument(rs.getString("open_document"))
+                    .closeDocument(rs.getString("close_document"))
+                    .closeFlag(rs.getBoolean("close_flag"))
                     .build();
         }
     }
