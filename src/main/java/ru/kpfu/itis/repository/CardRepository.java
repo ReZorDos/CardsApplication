@@ -15,6 +15,6 @@ public interface CardRepository {
 
     Card saveCardOfUser(Card card);
 
-    boolean closeCardOfUser(UUID cardId, String closeDocument);
+    boolean closeCardOfUser(UUID cardId, UUID closeDocumentId);
 
 }

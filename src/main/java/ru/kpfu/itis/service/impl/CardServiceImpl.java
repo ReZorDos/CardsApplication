@@ -3,6 +3,7 @@ package ru.kpfu.itis.service.impl;
 import lombok.RequiredArgsConstructor;
 import ru.kpfu.itis.dto.CardDto;
 import ru.kpfu.itis.dto.CreateCardRequest;
+import ru.kpfu.itis.dto.DocumentDto;
 import ru.kpfu.itis.mapper.CardMapper;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.model.CardProduct;
@@ -24,10 +25,15 @@ public class CardServiceImpl implements CardService {
     private final CardMapper cardMapper;
 
     @Override
-    public Optional<CardDto> getCardByCardId(UUID cardId) {
+    public Optional<Card> getCardByCardId(UUID cardId) {
+        return cardRepository.findById(cardId);
+    }
+
+    @Override
+    public Optional<CardDto> getCardDtoByCardId(UUID cardId) {
         Optional<Card> cardOptional = cardRepository.findById(cardId);
         if (cardOptional.isPresent()) {
-            return Optional.ofNullable(cardMapper.toDto(cardOptional.get()));
+            return Optional.ofNullable(cardMapper.toDtoWithoutDocument(cardOptional.get()));
         } else {
             return Optional.empty();
         }
@@ -39,7 +45,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardDto saveCard(Card card) {
+    public CardDto saveCard(Card card, DocumentDto documentDto) {
         card.setPlasticName(String.valueOf(ThreadLocalRandom.current().nextLong(1000000000000000L, 9999999999999999L)));
 
         LocalDate expDate = LocalDate.now().plusYears(10);
@@ -47,20 +53,21 @@ public class CardServiceImpl implements CardService {
 
         card.setCvv(random.nextInt(900) + 100);
 
+        card.setOpenDocumentId(documentDto.getId());
+
         Card cardResponse = cardRepository.saveCardOfUser(card);
-        return cardMapper.toDto(cardResponse);
+        return cardMapper.toDto(cardResponse, documentDto);
     }
 
     @Override
-    public boolean closeCard(UUID cardId, String closeDocument) {
+    public boolean closeCard(UUID cardId, UUID closeDocumentId) {
         Optional<Card> cardOptional = cardRepository.findById(cardId);
         if (cardOptional.isPresent()) {
-            return cardRepository.closeCardOfUser(cardId, closeDocument);
+            return cardRepository.closeCardOfUser(cardId, closeDocumentId);
         } else {
             return false;
         }
     }
-
 
     @Override
     public Card convertCreateRequestToCardEntity(CreateCardRequest cardRequest) {

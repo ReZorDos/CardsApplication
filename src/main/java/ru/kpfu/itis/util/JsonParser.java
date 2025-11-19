@@ -34,4 +34,8 @@ public class JsonParser {
         }
     }
 
+    public static <T> T fromJson(String json, Class<T> clazz) throws IOException {
+        return mapper.findAndRegisterModules().readValue(json, clazz);
+    }
+
 }

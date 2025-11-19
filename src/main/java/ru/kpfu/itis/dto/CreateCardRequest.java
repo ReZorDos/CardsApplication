@@ -17,7 +17,5 @@ public class CreateCardRequest {
     private UUID cardProductId;
     private String contractName;
     private String cardName;
-    private String openDocument;
-    private String closeDocument;
 
 }

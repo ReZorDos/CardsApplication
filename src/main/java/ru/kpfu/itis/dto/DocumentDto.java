@@ -5,18 +5,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TransactionDto {
+public class DocumentDto {
 
-    private UUID sourceContractId;
-    private UUID targetContractId;
-    private BigDecimal amount;
-    private String description;
+    private UUID id;
+    private String docType;
+    private Instant createdDate;
+    private UUID userId;
+    private String userFio;
+    private String cardNumber;
 
 }

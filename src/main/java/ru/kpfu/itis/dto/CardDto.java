@@ -1,13 +1,11 @@
 package ru.kpfu.itis.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,8 +17,8 @@ public class CardDto {
     private String expDate;
     private String contractName;
     private String cardName;
-    private String openDocument;
-    private String closeDocument;
+    private DocumentDto openDocument;
+    private DocumentDto closeDocument;
     private boolean closeFlag;
 
 }
