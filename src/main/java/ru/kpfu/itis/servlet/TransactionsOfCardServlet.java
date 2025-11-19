@@ -24,6 +24,7 @@ public class TransactionsOfCardServlet extends HttpServlet {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("/api/transactions?contractName=" + contractName))
                     .GET()
+                    .header("Content-Type", "application/json")
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

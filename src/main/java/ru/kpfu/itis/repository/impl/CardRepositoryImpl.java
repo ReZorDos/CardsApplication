@@ -27,10 +27,10 @@ public class CardRepositoryImpl implements CardRepository {
     private static final String SQL_ALL_CARD_PRODUCT = "select * from card_product";
     private static final String SQL_SAVE_CARD = """
             insert into card 
-            (user_id, card_product_id, plastic_name, exp_date, cvv, contract_name, card_name, open_document, close_document)
+            (user_id, card_product_id, plastic_name, exp_date, cvv, contract_name, card_name, open_document_id, close_document_id)
             values (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
-    private static final String SQL_UPDATE_DATE_EXPENSE = "update card set close_flag = true, close_document = ? where id = ?";
+    private static final String SQL_UPDATE_DATE_EXPENSE = "update card set close_flag = true, close_document_id = ? where id = ?";
 
 
     @Override
@@ -58,13 +58,13 @@ public class CardRepositoryImpl implements CardRepository {
             PreparedStatement ps = con.prepareStatement(SQL_SAVE_CARD, new String[] {"id"});
             ps.setObject(1, card.getUserId());
             ps.setObject(2, card.getCardProductId());
-            ps.setObject(3, card.getPlasticName());
-            ps.setObject(4, card.getExpDate());
-            ps.setObject(5, card.getCvv());
-            ps.setObject(6, card.getContractName());
-            ps.setObject(7, card.getCardName());
-            ps.setObject(8, card.getOpenDocument());
-            ps.setObject(9, card.getCloseDocument());
+            ps.setString(3, card.getPlasticName());
+            ps.setString(4, card.getExpDate());
+            ps.setInt(5, card.getCvv());
+            ps.setString(6, card.getContractName());
+            ps.setString(7, card.getCardName());
+            ps.setObject(8, card.getOpenDocumentId());
+            ps.setObject(9, card.getCloseDocumentId());
             return ps;
         }, keyHolder);
         UUID cardId = (UUID) keyHolder.getKeys().get("id");
@@ -72,8 +72,8 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public boolean closeCardOfUser(UUID cardId, String closeDocument) {
-        return jdbcTemplate.update(SQL_UPDATE_DATE_EXPENSE, closeDocument, cardId) == 1;
+    public boolean closeCardOfUser(UUID cardId, UUID closeDocumentId) {
+        return jdbcTemplate.update(SQL_UPDATE_DATE_EXPENSE, closeDocumentId, cardId) == 1;
     }
 
     private static final class CardRowMapper implements RowMapper<Card> {
@@ -89,8 +89,8 @@ public class CardRepositoryImpl implements CardRepository {
                     .cvv(rs.getInt("cvv"))
                     .contractName(rs.getString("contract_name"))
                     .cardName(rs.getString("card_name"))
-                    .openDocument(rs.getString("open_document"))
-                    .closeDocument(rs.getString("close_document"))
+                    .openDocumentId(UUID.fromString(rs.getString("open_document_id")))
+                    .closeDocumentId(UUID.fromString(rs.getString("close_document_id")))
                     .closeFlag(rs.getBoolean("close_flag"))
                     .build();
         }

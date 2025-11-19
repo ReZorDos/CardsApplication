@@ -8,10 +8,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.kpfu.itis.dto.ApiResponse;
 import ru.kpfu.itis.dto.CardDto;
+import ru.kpfu.itis.dto.DocumentDto;
+import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.service.CardService;
 import ru.kpfu.itis.util.JsonParser;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,18 +35,19 @@ public class CardInformationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String cardId = req.getParameter("id");
 
-        Optional<CardDto> cardDto = cardService.getCardByCardId(UUID.fromString(cardId));
+        //TODO: написать новый метод в сервисе, который достает чистый Card
+        Optional<Card> card = cardService.getCardByCardId(UUID.fromString(cardId));
 
-        if (cardDto.isPresent()) {
+        if (card.isPresent()) {
             resp.setStatus(HttpServletResponse.SC_OK);
-            ApiResponse<CardDto> apiResponseSuccess = ApiResponse.<CardDto>builder()
+            ApiResponse<Card> apiResponseSuccess = ApiResponse.<Card>builder()
                     .message("success")
-                    .data(cardDto.get())
+                    .data(card.get())
                     .build();
             JsonParser.writeResponseBody(apiResponseSuccess, resp);
         } else {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            ApiResponse<CardDto> apiResponseFail = ApiResponse.<CardDto>builder()
+            ApiResponse<Card> apiResponseFail = ApiResponse.<Card>builder()
                     .message("card not found")
                     .data(null)
                     .build();

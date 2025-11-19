@@ -24,6 +24,7 @@ public class ContractUserServlet extends HttpServlet {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("/api/transactions/contract?plasticName=" + plasticName))
                     .GET()
+                    .header("Content-Type", "application/json")
                     .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());

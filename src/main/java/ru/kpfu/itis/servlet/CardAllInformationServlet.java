@@ -14,16 +14,14 @@ import ru.kpfu.itis.util.JsonParser;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 
-@WebServlet("/api/cards/close-card")
-public class CloseCardServlet extends HttpServlet {
+@WebServlet("/api/cards/get-all-info")
+public class CardAllInformationServlet extends HttpServlet {
 
     private CardService cardService;
 
@@ -33,47 +31,47 @@ public class CloseCardServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             String cardId = req.getParameter("id");
 
-            Optional<CardDto> card = cardService.getCardDtoByCardId(UUID.fromString(cardId));
+            Optional<CardDto> cardDto = cardService.getCardDtoByCardId(UUID.fromString(cardId));
 
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("/docks/api/documents/close/" + card.get().getUserId()))
+                    .uri(URI.create("/docks/api/documents/user/open/" + cardId))
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            String jsonResponse = response.body();
-            DocumentDto documentDto = JsonParser.fromJson(jsonResponse, DocumentDto.class);
+            String jsonResponseOpenDocument = response.body();
+            DocumentDto openDocumentDto = JsonParser.fromJson(jsonResponseOpenDocument, DocumentDto.class);
+            cardDto.get().setOpenDocument(openDocumentDto);
 
-            boolean closeCard = cardService.closeCard(UUID.fromString(cardId), documentDto.getId());
+            HttpRequest request1 = HttpRequest.newBuilder()
+                    .uri(URI.create("/docks/api/documents/user/close/" + cardId))
+                    .build();
+            HttpResponse<String> response1 = client.send(request1, HttpResponse.BodyHandlers.ofString());
+            String jsonResponseCloseDocument = response1.body();
+            DocumentDto closeDocumentDto = JsonParser.fromJson(jsonResponseCloseDocument, DocumentDto.class);
+            cardDto.get().setCloseDocument(closeDocumentDto);
 
-            if (closeCard) {
-                resp.setStatus(HttpServletResponse.SC_ACCEPTED);
-                ApiResponse<Boolean> apiResponseSuccess = ApiResponse.<Boolean>builder()
+            if (cardDto.isPresent()) {
+                resp.setStatus(HttpServletResponse.SC_OK);
+                ApiResponse<CardDto> apiResponseSuccess = ApiResponse.<CardDto>builder()
                         .message("success")
-                        .data(true)
+                        .data(cardDto.get())
                         .build();
                 JsonParser.writeResponseBody(apiResponseSuccess, resp);
             } else {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                ApiResponse<Boolean> apiResponseFail = ApiResponse.<Boolean>builder()
-                        .message("fail")
-                        .data(false)
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                ApiResponse<CardDto> apiResponseFail = ApiResponse.<CardDto>builder()
+                        .message("card not found")
+                        .data(null)
                         .build();
                 JsonParser.writeResponseBody(apiResponseFail, resp);
             }
-        } catch (RuntimeException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            ApiResponse<Boolean> apiResponseFail = ApiResponse.<Boolean>builder()
-                    .message("fail")
-                    .data(false)
-                    .build();
-            JsonParser.writeResponseBody(apiResponseFail, resp);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
     }
+
 }
