@@ -73,4 +73,9 @@ public class CardServiceImpl implements CardService {
     public Card convertCreateRequestToCardEntity(CreateCardRequest cardRequest) {
         return cardMapper.convertCreateCardRequestToCard(cardRequest);
     }
+
+    @Override
+    public List<Card> getAllCardsOfUser(UUID userId) {
+        return cardRepository.findAllCardsOfUser(userId);
+    }
 }

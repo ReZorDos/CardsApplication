@@ -31,7 +31,7 @@ public class CardRepositoryImpl implements CardRepository {
             values (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
     private static final String SQL_UPDATE_DATE_EXPENSE = "update card set close_flag = true, close_document_id = ? where id = ?";
-
+    private static final String SQL_GET_ALL_CARDS_OF_USER = "select * from card where user_id = ?";
 
     @Override
     public Optional<Card> findById(UUID cardId) {
@@ -74,6 +74,15 @@ public class CardRepositoryImpl implements CardRepository {
     @Override
     public boolean closeCardOfUser(UUID cardId, UUID closeDocumentId) {
         return jdbcTemplate.update(SQL_UPDATE_DATE_EXPENSE, closeDocumentId, cardId) == 1;
+    }
+
+    @Override
+    public List<Card> findAllCardsOfUser(UUID userId) {
+        try {
+            return jdbcTemplate.query(SQL_GET_ALL_CARDS_OF_USER, cardRowMapper, userId);
+        } catch (EmptyResultDataAccessException e) {
+            return List.of();
+        }
     }
 
     private static final class CardRowMapper implements RowMapper<Card> {
