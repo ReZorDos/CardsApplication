@@ -20,5 +20,6 @@ public class CardDto {
     private DocumentDto openDocument;
     private DocumentDto closeDocument;
     private boolean closeFlag;
+    private String imageLink;
 
 }

@@ -4,6 +4,7 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import okhttp3.OkHttpClient;
 import ru.kpfu.itis.config.DataBaseConfig;
 import ru.kpfu.itis.mapper.CardMapper;
 import ru.kpfu.itis.repository.CardRepository;
@@ -23,6 +24,7 @@ public class ProjectStartUpListener implements ServletContextListener {
         CardService cardService = new CardServiceImpl(cardRepository, cardMapper);
         context.setAttribute("cardService", cardService);
 
-
+        OkHttpClient okHttpClient = new OkHttpClient();
+        context.setAttribute("okHttpClient", okHttpClient);
     }
 }
