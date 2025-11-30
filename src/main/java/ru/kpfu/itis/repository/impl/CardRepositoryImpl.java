@@ -27,11 +27,11 @@ public class CardRepositoryImpl implements CardRepository {
     private static final String SQL_ALL_CARD_PRODUCT = "select * from card_product";
     private static final String SQL_SAVE_CARD = """
             insert into card 
-            (user_id, card_product_id, plastic_name, exp_date, cvv, contract_name, card_name, open_document_id, close_document_id)
-            values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (user_id, card_product_id, plastic_name, exp_date, cvv, contract_name, card_name, open_document_id, close_document_id, image_link)
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
     private static final String SQL_UPDATE_DATE_EXPENSE = "update card set close_flag = true, close_document_id = ? where id = ?";
-
+    private static final String SQL_GET_ALL_CARDS_OF_USER = "select * from card where user_id = ?";
 
     @Override
     public Optional<Card> findById(UUID cardId) {
@@ -65,6 +65,7 @@ public class CardRepositoryImpl implements CardRepository {
             ps.setString(7, card.getCardName());
             ps.setObject(8, card.getOpenDocumentId());
             ps.setObject(9, card.getCloseDocumentId());
+            ps.setString(10, card.getImageLink());
             return ps;
         }, keyHolder);
         UUID cardId = (UUID) keyHolder.getKeys().get("id");
@@ -74,6 +75,15 @@ public class CardRepositoryImpl implements CardRepository {
     @Override
     public boolean closeCardOfUser(UUID cardId, UUID closeDocumentId) {
         return jdbcTemplate.update(SQL_UPDATE_DATE_EXPENSE, closeDocumentId, cardId) == 1;
+    }
+
+    @Override
+    public List<Card> findAllCardsOfUser(UUID userId) {
+        try {
+            return jdbcTemplate.query(SQL_GET_ALL_CARDS_OF_USER, cardRowMapper, userId);
+        } catch (EmptyResultDataAccessException e) {
+            return List.of();
+        }
     }
 
     private static final class CardRowMapper implements RowMapper<Card> {
@@ -92,6 +102,7 @@ public class CardRepositoryImpl implements CardRepository {
                     .openDocumentId(UUID.fromString(rs.getString("open_document_id")))
                     .closeDocumentId(UUID.fromString(rs.getString("close_document_id")))
                     .closeFlag(rs.getBoolean("close_flag"))
+                    .imageLink(rs.getString("image_link"))
                     .build();
         }
     }

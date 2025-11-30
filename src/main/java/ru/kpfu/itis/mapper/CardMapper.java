@@ -18,6 +18,7 @@ public class CardMapper {
                 .openDocument(documentDto.getDocType().equals("CARD_OPENED") ? documentDto : null)
                 .closeDocument(documentDto.getDocType().equals("CARD_CLOSED") ? documentDto : null)
                 .closeFlag(card.isCloseFlag())
+                .imageLink(card.getImageLink())
                 .build();
     }
 
@@ -30,6 +31,7 @@ public class CardMapper {
                 .contractName(card.getContractName())
                 .cardName(card.getCardName())
                 .closeFlag(card.isCloseFlag())
+                .imageLink(card.getImageLink())
                 .build();
     }
 
@@ -39,6 +41,7 @@ public class CardMapper {
                 .cardProductId(createCardRequest.getCardProductId())
                 .contractName(createCardRequest.getContractName())
                 .cardName(createCardRequest.getCardName())
+                .imageLink(createCardRequest.getImageLink())
                 .build();
     }
 

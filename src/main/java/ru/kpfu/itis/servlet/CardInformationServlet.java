@@ -7,17 +7,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.kpfu.itis.dto.ApiResponse;
-import ru.kpfu.itis.dto.CardDto;
-import ru.kpfu.itis.dto.DocumentDto;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.service.CardService;
 import ru.kpfu.itis.util.JsonParser;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,7 +29,6 @@ public class CardInformationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String cardId = req.getParameter("id");
 
-        //TODO: написать новый метод в сервисе, который достает чистый Card
         Optional<Card> card = cardService.getCardByCardId(UUID.fromString(cardId));
 
         if (card.isPresent()) {
