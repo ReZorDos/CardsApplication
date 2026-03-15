@@ -20,4 +20,8 @@ public interface CardRepository {
     List<Card> findAllCardsOfUser(UUID userId);
 
     Optional<CardProduct> findCardProductById(UUID id);
+
+    Optional<Card> findCardByPlasticName(String plasticName);
+
+    Optional<Card> findCardByContractId(String contractId);
 }

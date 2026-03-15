@@ -33,6 +33,7 @@ public class CardRepositoryImpl implements CardRepository {
     private static final String SQL_UPDATE_DATE_EXPENSE = "update card set close_flag = true, close_document_id = ? where id = ?";
     private static final String SQL_GET_ALL_CARDS_OF_USER = "select * from card where user_id = ?";
     private static final String SQL_GET_CARD_PRODUCT_BY_ID = "select * from card_product where id = ?";
+    private static final String SQL_GET_CARD_BY_PLASTIC_NAME = "select * from card where plastic_name = ?";
 
     @Override
     public Optional<Card> findById(UUID cardId) {
@@ -91,6 +92,15 @@ public class CardRepositoryImpl implements CardRepository {
     public Optional<CardProduct> findCardProductById(UUID id) {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_CARD_PRODUCT_BY_ID, cardProductRowMapper, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<Card> findCardByPlasticName(String plasticName) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_CARD_BY_PLASTIC_NAME, cardRowMapper, plasticName));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

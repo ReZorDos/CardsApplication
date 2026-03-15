@@ -83,4 +83,14 @@ public class CardServiceImpl implements CardService {
     public Optional<CardProduct> getCardProductById(UUID id) {
         return cardRepository.findCardProductById(id);
     }
+
+    @Override
+    public Optional<Card> getCardByPlasticName(String plasticName) {
+        return cardRepository.findCardByPlasticName(plasticName);
+    }
+
+    @Override
+    public Optional<Card> getCardByContractId(String contractId) {
+        return cardRepository.findCardByContractId(contractId);
+    }
 }
