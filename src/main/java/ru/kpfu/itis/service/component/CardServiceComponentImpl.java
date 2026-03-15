@@ -1,28 +1,27 @@
-package ru.kpfu.itis.service.impl;
+package ru.kpfu.itis.service.component;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.kpfu.itis.dto.CardDto;
 import ru.kpfu.itis.dto.CreateCardRequest;
 import ru.kpfu.itis.dto.DocumentDto;
-import ru.kpfu.itis.mapper.CardMapper;
+import ru.kpfu.itis.mapper.CardComponentMapper;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.model.CardProduct;
 import ru.kpfu.itis.repository.CardRepository;
 import ru.kpfu.itis.service.CardService;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+@Service
 @RequiredArgsConstructor
-public class CardServiceImpl implements CardService {
+public class CardServiceComponentImpl implements CardService {
 
     private final Random random = new Random();
     private final CardRepository cardRepository;
-    private final CardMapper cardMapper;
+    private final CardComponentMapper cardMapper;
 
     @Override
     public Optional<Card> getCardByCardId(UUID cardId) {

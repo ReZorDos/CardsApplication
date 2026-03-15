@@ -18,4 +18,6 @@ public interface CardRepository {
     boolean closeCardOfUser(UUID cardId, UUID closeDocumentId);
 
     List<Card> findAllCardsOfUser(UUID userId);
+
+    Optional<CardProduct> findCardProductById(UUID id);
 }

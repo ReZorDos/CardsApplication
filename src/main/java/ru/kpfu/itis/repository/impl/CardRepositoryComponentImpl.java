@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.model.CardProduct;
 import ru.kpfu.itis.repository.CardRepository;
@@ -17,8 +18,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 @RequiredArgsConstructor
-public class CardRepositoryImpl implements CardRepository {
+public class CardRepositoryComponentImpl implements CardRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final CardRowMapper cardRowMapper = new CardRowMapper();
@@ -88,7 +90,7 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public Optional<CardProduct> findCardProductById(UUID id) {
+    public  Optional<CardProduct> findCardProductById(UUID id) {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_CARD_PRODUCT_BY_ID, cardProductRowMapper, id));
         } catch (EmptyResultDataAccessException e) {

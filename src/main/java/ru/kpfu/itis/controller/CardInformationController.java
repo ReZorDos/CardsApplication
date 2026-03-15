@@ -17,9 +17,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api2/cards/get-all-info")
+@RequestMapping("/api/v2/cards")
 @RequiredArgsConstructor
-public class CardAllInformationController {
+public class CardInformationController {
 
     private final CardService cardService;
     private final RestTemplate restTemplate;
@@ -46,4 +46,8 @@ public class CardAllInformationController {
         } catch (Exception e) {}
         return ResponseEntity.ok(new ApiResponse<>("success", cardDto));
     }
+
+
+
+
 }

@@ -25,4 +25,6 @@ public interface CardService {
     Card convertCreateRequestToCardEntity(CreateCardRequest cardRequest);
 
     List<Card> getAllCardsOfUser(UUID userId);
+
+    Optional<CardProduct> getCardProductById(UUID id);
 }
