@@ -1,6 +1,7 @@
 package ru.kpfu.itis.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@Slf4j
 @RequestMapping("api/v2/cards")
 @RequiredArgsConstructor
 public class ProductController {

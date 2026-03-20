@@ -1,11 +1,14 @@
 package ru.kpfu.itis.repository.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.model.CardProduct;
 import ru.kpfu.itis.repository.CardRepository;
@@ -17,9 +20,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Repository
 @RequiredArgsConstructor
 public class CardRepositoryImpl implements CardRepository {
 
+    private static final Logger log = LoggerFactory.getLogger(CardRepositoryImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final CardRowMapper cardRowMapper = new CardRowMapper();
     private final CardProductRowMapper cardProductRowMapper = new CardProductRowMapper();
@@ -34,6 +39,7 @@ public class CardRepositoryImpl implements CardRepository {
     private static final String SQL_GET_ALL_CARDS_OF_USER = "select * from card where user_id = ?";
     private static final String SQL_GET_CARD_PRODUCT_BY_ID = "select * from card_product where id = ?";
     private static final String SQL_GET_CARD_BY_PLASTIC_NAME = "select * from card where plastic_name = ?";
+    private static final String SQL_GET_CARD_BY_CONTRACT_NAME = "select * from card where contract_name = ?";
 
     @Override
     public Optional<Card> findById(UUID cardId) {
@@ -89,7 +95,7 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public Optional<CardProduct> findCardProductById(UUID id) {
+    public  Optional<CardProduct> findCardProductById(UUID id) {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_CARD_PRODUCT_BY_ID, cardProductRowMapper, id));
         } catch (EmptyResultDataAccessException e) {
@@ -108,7 +114,11 @@ public class CardRepositoryImpl implements CardRepository {
 
     @Override
     public Optional<Card> findCardByContractId(String contractId) {
-        return Optional.empty();
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_CARD_BY_CONTRACT_NAME, cardRowMapper, contractId));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     private static final class CardRowMapper implements RowMapper<Card> {

@@ -12,7 +12,7 @@ import ru.kpfu.itis.dto.CardDto;
 import ru.kpfu.itis.dto.DocumentDto;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.service.CardService;
-import ru.kpfu.itis.service.component.ApiCallResponse;
+import ru.kpfu.itis.service.impl.ApiCallResponse;
 
 import java.util.List;
 import java.util.Optional;

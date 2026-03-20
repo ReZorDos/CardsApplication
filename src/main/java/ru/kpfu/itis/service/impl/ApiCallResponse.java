@@ -1,4 +1,4 @@
-package ru.kpfu.itis.service.component;
+package ru.kpfu.itis.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

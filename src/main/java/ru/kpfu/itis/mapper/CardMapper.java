@@ -1,10 +1,12 @@
 package ru.kpfu.itis.mapper;
 
+import org.springframework.stereotype.Component;
 import ru.kpfu.itis.dto.CardDto;
 import ru.kpfu.itis.dto.CreateCardRequest;
 import ru.kpfu.itis.dto.DocumentDto;
 import ru.kpfu.itis.model.Card;
 
+@Component
 public class CardMapper {
 
     public CardDto toDto(Card card, DocumentDto documentDto) {

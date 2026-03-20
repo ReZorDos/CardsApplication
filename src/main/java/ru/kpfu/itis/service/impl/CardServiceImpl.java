@@ -1,6 +1,9 @@
 package ru.kpfu.itis.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
 import ru.kpfu.itis.dto.CardDto;
 import ru.kpfu.itis.dto.CreateCardRequest;
 import ru.kpfu.itis.dto.DocumentDto;
@@ -11,15 +14,14 @@ import ru.kpfu.itis.repository.CardRepository;
 import ru.kpfu.itis.service.CardService;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+@Service
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
 
+    private static final Log log = LogFactory.getLog(CardServiceImpl.class);
     private final Random random = new Random();
     private final CardRepository cardRepository;
     private final CardMapper cardMapper;

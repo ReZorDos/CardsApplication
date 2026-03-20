@@ -7,10 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.dto.CreateCardRequest;
 import ru.kpfu.itis.dto.DocumentDto;
-import ru.kpfu.itis.mapper.CardComponentMapper;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.service.CardService;
-import ru.kpfu.itis.service.component.ApiCallResponse;
+import ru.kpfu.itis.service.impl.ApiCallResponse;
 
 import java.util.Optional;
 import java.util.UUID;
