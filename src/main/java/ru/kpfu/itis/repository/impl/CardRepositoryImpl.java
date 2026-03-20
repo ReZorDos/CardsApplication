@@ -106,6 +106,11 @@ public class CardRepositoryImpl implements CardRepository {
         }
     }
 
+    @Override
+    public Optional<Card> findCardByContractId(String contractId) {
+        return Optional.empty();
+    }
+
     private static final class CardRowMapper implements RowMapper<Card> {
 
         @Override

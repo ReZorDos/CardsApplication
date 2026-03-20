@@ -17,7 +17,7 @@ public class ApiCallResponse {
 
     private final RestTemplate restTemplate;
 
-    private static final String API_GET_DOCUMENT = "IP_ДОКУМЕНТОВ/docks/api/documents/";
+    private static final String API_GET_DOCUMENT = "185.221.160.131/api/documents/";
 
     public Optional<DocumentDto> getDocument(UUID id, String typeDocument) {
         String apiUrl = String.join(API_GET_DOCUMENT, typeDocument, "/", String.valueOf(id));
