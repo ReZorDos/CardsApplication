@@ -13,7 +13,7 @@ create table card (
     exp_date varchar(255),
     cvv int,
     contract_name varchar(255),
-    card_name varchar(255),
+    pan varchar(255) unique,
     open_document varchar(255),
     close_document varchar(255),
     close_flag boolean default false,

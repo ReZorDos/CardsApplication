@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.dto.CardDto;
 import ru.kpfu.itis.dto.CreateCardRequest;
-import ru.kpfu.itis.dto.DocumentResponseDto;
 import ru.kpfu.itis.mapper.CardMapper;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.model.CardProduct;
@@ -94,8 +93,8 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Optional<CardDto> getCardByPlasticName(String plasticName) {
-        Optional<Card> card = cardRepository.findCardByPlasticName(plasticName);
+    public Optional<CardDto> getCardByPan(String pan) {
+        Optional<Card> card = cardRepository.findCardByPan(pan);
         if (card.isPresent()) {
             CardProduct cardProduct = cardRepository.findCardProductById(card.get().getCardProductId()).orElseThrow();
             return Optional.ofNullable(cardMapper.toDto(card.get(), cardProduct));

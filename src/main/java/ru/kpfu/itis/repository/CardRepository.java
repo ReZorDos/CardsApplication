@@ -21,7 +21,7 @@ public interface CardRepository {
 
     Optional<CardProduct> findCardProductById(UUID id);
 
-    Optional<Card> findCardByPlasticName(String plasticName);
+    Optional<Card> findCardByPan(String pan);
 
     Optional<Card> findCardByContractId(String contractId);
 }

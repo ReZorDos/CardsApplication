@@ -20,7 +20,7 @@ public class Card {
     private String expDate;
     private int cvv;
     private String contractName;
-    private String cardName;
+    private String pan;
     private UUID openDocumentId;
     private UUID closeDocumentId;
     private boolean closeFlag;

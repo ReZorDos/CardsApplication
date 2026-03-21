@@ -29,13 +29,13 @@ public class CardRepositoryImpl implements CardRepository {
     private static final String SQL_ALL_CARD_PRODUCT = "select * from card_product";
     private static final String SQL_SAVE_CARD = """
             insert into card 
-            (user_id, card_product_id, plastic_name, exp_date, cvv, contract_name, card_name, open_document, close_document, image_link)
+            (user_id, card_product_id, plastic_name, exp_date, cvv, contract_name, pan, open_document, close_document, image_link)
             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
     private static final String SQL_UPDATE_DATE_EXPENSE = "update card set close_flag = true, close_document_id = ? where id = ?";
     private static final String SQL_GET_ALL_CARDS_OF_USER = "select * from card where user_id = ?";
     private static final String SQL_GET_CARD_PRODUCT_BY_ID = "select * from card_product where id = ?";
-    private static final String SQL_GET_CARD_BY_PLASTIC_NAME = "select * from card where plastic_name = ?";
+    private static final String SQL_GET_CARD_BY_PLASTIC_NAME = "select * from card where pan = ?";
     private static final String SQL_GET_CARD_BY_CONTRACT_NAME = "select * from card where contract_name = ?";
 
     @Override
@@ -67,7 +67,7 @@ public class CardRepositoryImpl implements CardRepository {
             ps.setString(4, card.getExpDate());
             ps.setInt(5, card.getCvv());
             ps.setString(6, card.getContractName());
-            ps.setString(7, card.getCardName());
+            ps.setString(7, card.getPan());
             ps.setObject(8, card.getOpenDocumentId());
             ps.setObject(9, card.getCloseDocumentId());
             ps.setString(10, card.getImageLink());
@@ -101,9 +101,9 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public Optional<Card> findCardByPlasticName(String plasticName) {
+    public Optional<Card> findCardByPan(String pan) {
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_CARD_BY_PLASTIC_NAME, cardRowMapper, plasticName));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SQL_GET_CARD_BY_PLASTIC_NAME, cardRowMapper, pan));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -130,7 +130,7 @@ public class CardRepositoryImpl implements CardRepository {
                     .expDate(rs.getString("exp_date"))
                     .cvv(rs.getInt("cvv"))
                     .contractName(rs.getString("contract_name"))
-                    .cardName(rs.getString("card_name"))
+                    .pan(rs.getString("pan"))
                     .openDocumentId(rs.getString("open_document") != null ?
                             UUID.fromString(rs.getString("open_document")) : null)
                     .closeDocumentId(rs.getString("close_document") != null ?

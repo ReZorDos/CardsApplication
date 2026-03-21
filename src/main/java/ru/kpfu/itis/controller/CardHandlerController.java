@@ -55,7 +55,7 @@ public class CardHandlerController {
             Optional<Card> card = cardService.getCardByCardId(cardId);
             if (card.isPresent()) {
                 Optional<DocumentResponseDto> documentResponseDto = apiCallResponse.createDocument(card.get().getUserId(),
-                        card.get().getCardName(),
+                        "user FIO",
                         card.get().getContractName(),
                         "CARD_CLOSE"
                 );

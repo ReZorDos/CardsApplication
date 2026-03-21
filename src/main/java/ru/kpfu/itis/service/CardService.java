@@ -28,7 +28,7 @@ public interface CardService {
 
     Optional<CardProduct> getCardProductById(UUID id);
 
-    Optional<CardDto> getCardByPlasticName(String plasticName);
+    Optional<CardDto> getCardByPan(String plasticName);
 
     Optional<CardDto> getCardByContractId(String contractId);
 }

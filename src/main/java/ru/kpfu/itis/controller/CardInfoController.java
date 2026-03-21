@@ -60,7 +60,7 @@ public class CardInfoController {
     @GetMapping("/by-pan/{panId}")
     public ResponseEntity<CardDto> getCardsInfoByUserId(@PathVariable("panId") String panId) {
         try {
-            Optional<CardDto> card = cardService.getCardByPlasticName(panId);
+            Optional<CardDto> card = cardService.getCardByPan(panId);
             if (card.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }

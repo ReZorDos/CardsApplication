@@ -15,25 +15,11 @@ public class CardMapper {
                 .userId(card.getUserId())
                 .plasticName(card.getPlasticName())
                 .contractName(card.getContractName())
-                .pan(card.get)
+                .pan(card.getPan())
                 .expDate(card.getExpDate())
-                .cardName(card.getCardName())
+                .cvv(String.valueOf(card.getCvv()))
                 .cardProduct(cardProduct)
                 .closeFlag(card.isCloseFlag())
-                .imageLink(card.getImageLink())
-                .build();
-    }
-
-    public CardDto toDtoWithoutDocument(Card card) {
-        return CardDto.builder()
-                .userId(card.getUserId())
-                .cardProductId(card.getCardProductId())
-                .plasticName(card.getPlasticName())
-                .expDate(card.getExpDate())
-                .contractName(card.getContractName())
-                .cardName(card.getCardName())
-                .closeFlag(card.isCloseFlag())
-                .imageLink(card.getImageLink())
                 .build();
     }
 
@@ -41,8 +27,6 @@ public class CardMapper {
         return Card.builder()
                 .userId(createCardRequest.getUserId())
                 .cardProductId(createCardRequest.getCardProductId())
-                .contractName(createCardRequest.getContractName())
-                .cardName(createCardRequest.getCardName())
                 .imageLink(createCardRequest.getImageLink())
                 .build();
     }
