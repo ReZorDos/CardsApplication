@@ -3,22 +3,22 @@ package ru.kpfu.itis.mapper;
 import org.springframework.stereotype.Component;
 import ru.kpfu.itis.dto.CardDto;
 import ru.kpfu.itis.dto.CreateCardRequest;
-import ru.kpfu.itis.dto.DocumentDto;
 import ru.kpfu.itis.model.Card;
+import ru.kpfu.itis.model.CardProduct;
 
 @Component
 public class CardMapper {
 
-    public CardDto toDto(Card card, DocumentDto documentDto) {
+    public CardDto toDto(Card card, CardProduct cardProduct) {
         return CardDto.builder()
+                .id(card.getId())
                 .userId(card.getUserId())
-                .cardProductId(card.getCardProductId())
                 .plasticName(card.getPlasticName())
-                .expDate(card.getExpDate())
                 .contractName(card.getContractName())
+                .pan(card.get)
+                .expDate(card.getExpDate())
                 .cardName(card.getCardName())
-                .openDocument(documentDto.getDocType().equals("CARD_OPENED") ? documentDto : null)
-                .closeDocument(documentDto.getDocType().equals("CARD_CLOSED") ? documentDto : null)
+                .cardProduct(cardProduct)
                 .closeFlag(card.isCloseFlag())
                 .imageLink(card.getImageLink())
                 .build();

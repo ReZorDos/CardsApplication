@@ -5,8 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.kpfu.itis.dto.CardDto;
 import ru.kpfu.itis.dto.CreateCardRequest;
-import ru.kpfu.itis.dto.DocumentDto;
+import ru.kpfu.itis.dto.DocumentResponseDto;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.service.CardService;
 import ru.kpfu.itis.service.impl.ApiCallResponse;
@@ -26,15 +27,19 @@ public class CardHandlerController {
     @PostMapping
     public ResponseEntity<?> createCard(@RequestBody CreateCardRequest createCardRequest) {
         try {
-            Optional<DocumentDto> documentOpenDto = apiCallResponse.getDocument(createCardRequest.getUserId(), "open");
-            if (documentOpenDto.isPresent()) {
-                Card card = cardService.convertCreateRequestToCardEntity(createCardRequest);
-                cardService.saveCard(card, documentOpenDto.get());
+            Card card = cardService.convertCreateRequestToCardEntity(createCardRequest);
+            Optional<DocumentResponseDto> documentResponseDto = apiCallResponse.createDocument(
+                    card.getUserId(),
+                    "Булат Булатович Буалтович",
+                    "1111222233334444",
+                    "CARD_OPENED"
+            );
+            if (documentResponseDto.isPresent()) {
+                cardService.saveCard(card, documentResponseDto.get().getId());
                 return new ResponseEntity<>(HttpStatus.CREATED);
-            } else {
-                log.info("Документ не был получен из запроса");
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+            return new ResponseEntity<>("Не смог получить документ", HttpStatus.NOT_FOUND);
+
         } catch (IllegalArgumentException e) {
             log.error("Некорректные данные для создания карты: {}", e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -45,15 +50,23 @@ public class CardHandlerController {
     }
 
     @DeleteMapping("/{cardId}")
-    public ResponseEntity<?> deleteCard(@PathVariable("cardId") UUID cardId) {
+    public ResponseEntity<?> closeCard(@PathVariable("cardId") UUID cardId) {
         try {
-            Optional<DocumentDto> documentCloseDto = apiCallResponse.getDocument(cardId, "close");
-            if (documentCloseDto.isPresent()) {
-                cardService.closeCard(cardId, documentCloseDto.get().getId());
-                return new ResponseEntity<>(HttpStatus.OK);
+            Optional<Card> card = cardService.getCardByCardId(cardId);
+            if (card.isPresent()) {
+                Optional<DocumentResponseDto> documentResponseDto = apiCallResponse.createDocument(card.get().getUserId(),
+                        card.get().getCardName(),
+                        card.get().getContractName(),
+                        "CARD_CLOSE"
+                );
+                if (documentResponseDto.isPresent()) {
+                     cardService.closeCard(cardId, documentResponseDto.get().getId());
+                     return new ResponseEntity<>(HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>("Не получилось достать документ", HttpStatus.NOT_FOUND);
+                }
             } else {
-                log.info("Документ не был получен из запроса");
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Нет такой карты", HttpStatus.NOT_FOUND);
             }
         } catch (IllegalArgumentException e) {
             log.error("Некорректные данные для создания карты: {}", e.getMessage());

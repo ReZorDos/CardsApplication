@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kpfu.itis.dto.CardDto;
-import ru.kpfu.itis.dto.DocumentDto;
-import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.service.CardService;
-import ru.kpfu.itis.service.impl.ApiCallResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,23 +22,15 @@ import java.util.UUID;
 public class CardInfoController {
 
     private final CardService cardService;
-    private final ApiCallResponse apiCallResponse;
 
     @GetMapping("/by-id/{id}")
     public ResponseEntity<CardDto> getCardInfoByCardId(@PathVariable("id") UUID id) {
         try {
-            Optional<CardDto> cardDtoOpt = cardService.getCardDtoByCardId(id);
-            if (cardDtoOpt.isEmpty()) {
+            Optional<CardDto> cardDto = cardService.getCardDtoByCardId(id);
+            if (cardDto.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            CardDto cardDto = cardDtoOpt.get();
-
-            Optional<DocumentDto> openDoc = apiCallResponse.getDocument(id, "open");
-            openDoc.ifPresent(cardDto::setOpenDocument);
-
-            Optional<DocumentDto> closeDoc = apiCallResponse.getDocument(id, "close");
-            closeDoc.ifPresent(cardDto::setCloseDocument);
-            return ResponseEntity.ok(cardDto);
+            return ResponseEntity.ok(cardDto.get());
         } catch (IllegalArgumentException e) {
             log.error("Некорректные данные для получения карты: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -52,9 +41,9 @@ public class CardInfoController {
     }
 
     @GetMapping("/by-user/{userId}")
-    public ResponseEntity<List<Card>> getCardsInfoByUserId(@PathVariable("userId") UUID userId) {
+    public ResponseEntity<List<CardDto>> getCardsInfoByUserId(@PathVariable("userId") UUID userId) {
         try {
-            List<Card> cardDtoList = cardService.getAllCardsOfUser(userId);
+            List<CardDto> cardDtoList = cardService.getAllCardsOfUser(userId);
             if (cardDtoList.isEmpty()) {
                 return ResponseEntity.ok(List.of());
             }
@@ -69,9 +58,9 @@ public class CardInfoController {
     }
 
     @GetMapping("/by-pan/{panId}")
-    public ResponseEntity<Card> getCardsInfoByUserId(@PathVariable("panId") String panId) {
+    public ResponseEntity<CardDto> getCardsInfoByUserId(@PathVariable("panId") String panId) {
         try {
-            Optional<Card> card = cardService.getCardByPlasticName(panId);
+            Optional<CardDto> card = cardService.getCardByPlasticName(panId);
             if (card.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -86,9 +75,9 @@ public class CardInfoController {
     }
 
     @GetMapping("/by-contract/{contractId}")
-    public ResponseEntity<Card> getCardInfoByContractId(@PathVariable("contractId") String contractId) {
+    public ResponseEntity<CardDto> getCardInfoByContractId(@PathVariable("contractId") String contractId) {
         try {
-            Optional<Card> card = cardService.getCardByContractId(contractId);
+            Optional<CardDto> card = cardService.getCardByContractId(contractId);
             if (card.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }

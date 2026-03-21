@@ -1,12 +1,10 @@
 package ru.kpfu.itis.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.dto.CardDto;
 import ru.kpfu.itis.dto.CreateCardRequest;
-import ru.kpfu.itis.dto.DocumentDto;
+import ru.kpfu.itis.dto.DocumentResponseDto;
 import ru.kpfu.itis.mapper.CardMapper;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.model.CardProduct;
@@ -16,12 +14,12 @@ import ru.kpfu.itis.service.CardService;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CardServiceImpl implements CardService {
 
-    private static final Log log = LogFactory.getLog(CardServiceImpl.class);
     private final Random random = new Random();
     private final CardRepository cardRepository;
     private final CardMapper cardMapper;
@@ -33,9 +31,10 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public Optional<CardDto> getCardDtoByCardId(UUID cardId) {
-        Optional<Card> cardOptional = cardRepository.findById(cardId);
-        if (cardOptional.isPresent()) {
-            return Optional.ofNullable(cardMapper.toDtoWithoutDocument(cardOptional.get()));
+        Optional<Card> card = cardRepository.findById(cardId);
+        if (card.isPresent()) {
+            CardProduct cardProduct = cardRepository.findCardProductById(card.get().getCardProductId()).orElseThrow();
+            return Optional.ofNullable(cardMapper.toDto(card.get(), cardProduct));
         } else {
             return Optional.empty();
         }
@@ -47,7 +46,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardDto saveCard(Card card, DocumentDto documentDto) {
+    public CardDto saveCard(Card card, UUID documentOpenDto) {
         card.setPlasticName(String.valueOf(ThreadLocalRandom.current().nextLong(1000000000000000L, 9999999999999999L)));
 
         LocalDate expDate = LocalDate.now().plusYears(10);
@@ -55,10 +54,12 @@ public class CardServiceImpl implements CardService {
 
         card.setCvv(random.nextInt(900) + 100);
 
-        card.setOpenDocumentId(documentDto.getId());
+        card.setOpenDocumentId(documentOpenDto);
 
         Card cardResponse = cardRepository.saveCardOfUser(card);
-        return cardMapper.toDto(cardResponse, documentDto);
+        CardProduct cardProduct = cardRepository.findCardProductById(card.getCardProductId())
+                .orElseThrow(() -> new RuntimeException("Card product not found"));
+        return cardMapper.toDto(cardResponse, cardProduct);
     }
 
     @Override
@@ -77,8 +78,14 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public List<Card> getAllCardsOfUser(UUID userId) {
-        return cardRepository.findAllCardsOfUser(userId);
+    public List<CardDto> getAllCardsOfUser(UUID userId) {
+        return cardRepository.findAllCardsOfUser(userId).stream()
+                .map(card -> {
+                    CardProduct cardProduct = cardRepository.findCardProductById(card.getCardProductId())
+                            .orElseThrow(() -> new RuntimeException("Card product not found"));
+                    return cardMapper.toDto(card, cardProduct);
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -87,12 +94,24 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Optional<Card> getCardByPlasticName(String plasticName) {
-        return cardRepository.findCardByPlasticName(plasticName);
+    public Optional<CardDto> getCardByPlasticName(String plasticName) {
+        Optional<Card> card = cardRepository.findCardByPlasticName(plasticName);
+        if (card.isPresent()) {
+            CardProduct cardProduct = cardRepository.findCardProductById(card.get().getCardProductId()).orElseThrow();
+            return Optional.ofNullable(cardMapper.toDto(card.get(), cardProduct));
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Optional<Card> getCardByContractId(String contractId) {
-        return cardRepository.findCardByContractId(contractId);
+    public Optional<CardDto> getCardByContractId(String contractId) {
+        Optional<Card> card = cardRepository.findCardByContractId(contractId);
+        if (card.isPresent()) {
+            CardProduct cardProduct = cardRepository.findCardProductById(card.get().getCardProductId()).orElseThrow();
+            return Optional.ofNullable(cardMapper.toDto(card.get(), cardProduct));
+        } else {
+            return Optional.empty();
+        }
     }
 }

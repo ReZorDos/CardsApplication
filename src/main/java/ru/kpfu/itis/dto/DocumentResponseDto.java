@@ -6,18 +6,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DocumentDto {
+public class DocumentResponseDto {
 
     private UUID id;
     private String docType;
-    private Instant createdDate;
     private UUID userId;
+    private String createdDate;
     private String userFio;
     private String cardNumber;
 

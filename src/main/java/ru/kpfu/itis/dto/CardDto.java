@@ -1,6 +1,7 @@
 package ru.kpfu.itis.dto;
 
 import lombok.*;
+import ru.kpfu.itis.model.CardProduct;
 
 import java.util.UUID;
 
@@ -11,15 +12,56 @@ import java.util.UUID;
 @Builder
 public class CardDto {
 
+    private UUID id;
+
+    /**
+     * id пользователя
+     */
     private UUID userId;
-    private UUID cardProductId;
+
+    /**
+     * Имя владельца карты
+     */
     private String plasticName;
-    private String expDate;
+
+    /**
+     * Договор на карту
+     */
     private String contractName;
-    private String cardName;
-    private DocumentDto openDocument;
-    private DocumentDto closeDocument;
+
+    /**
+     * 16-ти значный номер карты
+     */
+    private String pan;
+
+    /**
+     * дата истечения карты
+     */
+    private String expDate;
+
+    /**
+     * 3 цифры с оборота карты
+     */
+    private String cvv;
+
+    /**
+     * id документа о открытии карты
+     */
+    private UUID openDocumentId;
+
+    /**
+     * id документа о закрытии карты
+     */
+    private UUID closeDocumentId;
+
+    /**
+     * Тип карты
+     */
+    private CardProduct cardProduct;
+
+    /**
+     * Закрыта ли карта
+     */
     private boolean closeFlag;
-    private String imageLink;
 
 }

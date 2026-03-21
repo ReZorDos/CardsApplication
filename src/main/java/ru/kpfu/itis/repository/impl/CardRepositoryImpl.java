@@ -1,8 +1,6 @@
 package ru.kpfu.itis.repository.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,7 +22,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CardRepositoryImpl implements CardRepository {
 
-    private static final Logger log = LoggerFactory.getLogger(CardRepositoryImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final CardRowMapper cardRowMapper = new CardRowMapper();
     private final CardProductRowMapper cardProductRowMapper = new CardProductRowMapper();
@@ -32,7 +29,7 @@ public class CardRepositoryImpl implements CardRepository {
     private static final String SQL_ALL_CARD_PRODUCT = "select * from card_product";
     private static final String SQL_SAVE_CARD = """
             insert into card 
-            (user_id, card_product_id, plastic_name, exp_date, cvv, contract_name, card_name, open_document_id, close_document_id, image_link)
+            (user_id, card_product_id, plastic_name, exp_date, cvv, contract_name, card_name, open_document, close_document, image_link)
             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
     private static final String SQL_UPDATE_DATE_EXPENSE = "update card set close_flag = true, close_document_id = ? where id = ?";
@@ -134,8 +131,10 @@ public class CardRepositoryImpl implements CardRepository {
                     .cvv(rs.getInt("cvv"))
                     .contractName(rs.getString("contract_name"))
                     .cardName(rs.getString("card_name"))
-                    .openDocumentId(UUID.fromString(rs.getString("open_document_id")))
-                    .closeDocumentId(UUID.fromString(rs.getString("close_document_id")))
+                    .openDocumentId(rs.getString("open_document") != null ?
+                            UUID.fromString(rs.getString("open_document")) : null)
+                    .closeDocumentId(rs.getString("close_document") != null ?
+                            UUID.fromString(rs.getString("close_document")) : null)
                     .closeFlag(rs.getBoolean("close_flag"))
                     .imageLink(rs.getString("image_link"))
                     .build();

@@ -2,7 +2,7 @@ package ru.kpfu.itis.service;
 
 import ru.kpfu.itis.dto.CardDto;
 import ru.kpfu.itis.dto.CreateCardRequest;
-import ru.kpfu.itis.dto.DocumentDto;
+import ru.kpfu.itis.dto.DocumentResponseDto;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.model.CardProduct;
 
@@ -18,17 +18,17 @@ public interface CardService {
 
     List<CardProduct> getAllCardProduct();
 
-    CardDto saveCard(Card card, DocumentDto documentDto);
+    CardDto saveCard(Card card, UUID documentOpenDto);
 
     boolean closeCard(UUID cardId, UUID closeDocumentId);
 
     Card convertCreateRequestToCardEntity(CreateCardRequest cardRequest);
 
-    List<Card> getAllCardsOfUser(UUID userId);
+    List<CardDto> getAllCardsOfUser(UUID userId);
 
     Optional<CardProduct> getCardProductById(UUID id);
 
-    Optional<Card> getCardByPlasticName(String plasticName);
+    Optional<CardDto> getCardByPlasticName(String plasticName);
 
-    Optional<Card> getCardByContractId(String contractId);
+    Optional<CardDto> getCardByContractId(String contractId);
 }
