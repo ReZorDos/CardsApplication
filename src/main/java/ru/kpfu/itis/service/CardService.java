@@ -18,7 +18,7 @@ public interface CardService {
 
     List<CardProduct> getAllCardProduct();
 
-    CardDto saveCard(Card card, UUID documentOpenDto);
+    CardDto saveCard(Card card, UUID documentOpenDto, String pan, String fio);
 
     boolean closeCard(UUID cardId, UUID closeDocumentId);
 
@@ -31,4 +31,6 @@ public interface CardService {
     Optional<CardDto> getCardByPan(String plasticName);
 
     Optional<CardDto> getCardByContractId(String contractId);
+
+    String createPan();
 }

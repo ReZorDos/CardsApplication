@@ -32,7 +32,7 @@ public class CardRepositoryImpl implements CardRepository {
             (user_id, card_product_id, plastic_name, exp_date, cvv, contract_name, pan, open_document, close_document, image_link)
             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
-    private static final String SQL_UPDATE_DATE_EXPENSE = "update card set close_flag = true, close_document_id = ? where id = ?";
+    private static final String SQL_UPDATE_DATE_EXPENSE = "update card set close_flag = true, close_document = ? where id = ?";
     private static final String SQL_GET_ALL_CARDS_OF_USER = "select * from card where user_id = ?";
     private static final String SQL_GET_CARD_PRODUCT_BY_ID = "select * from card_product where id = ?";
     private static final String SQL_GET_CARD_BY_PLASTIC_NAME = "select * from card where pan = ?";

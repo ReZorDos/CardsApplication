@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.dto.CardDto;
 import ru.kpfu.itis.dto.CreateCardRequest;
 import ru.kpfu.itis.dto.DocumentResponseDto;
+import ru.kpfu.itis.dto.UserResponseDto;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.service.CardService;
+import ru.kpfu.itis.service.MockService;
 import ru.kpfu.itis.service.impl.ApiCallResponse;
 
 import java.util.Optional;
@@ -24,18 +26,27 @@ public class CardHandlerController {
     private final CardService cardService;
     private final ApiCallResponse apiCallResponse;
 
+    //TODO: удалить после подсоединения юзера
+    private final MockService mockService;
+
     @PostMapping
     public ResponseEntity<?> createCard(@RequestBody CreateCardRequest createCardRequest) {
         try {
             Card card = cardService.convertCreateRequestToCardEntity(createCardRequest);
+            //Optional<UserResponseDto> user = apiCallResponse.getUser(card.getUserId());
+            Optional<UserResponseDto> user = mockService.getUser();
+            if (user.isEmpty()) {
+                return new ResponseEntity<>("NO SUCH USER", HttpStatus.NOT_FOUND);
+            }
+            String pan = cardService.createPan();
             Optional<DocumentResponseDto> documentResponseDto = apiCallResponse.createDocument(
                     card.getUserId(),
-                    "Булат Булатович Буалтович",
-                    "1111222233334444",
+                    user.get().getFio(),
+                    pan,
                     "CARD_OPENED"
             );
             if (documentResponseDto.isPresent()) {
-                cardService.saveCard(card, documentResponseDto.get().getId());
+                cardService.saveCard(card, documentResponseDto.get().getId(), pan, user.get().getFio());
                 return new ResponseEntity<>(HttpStatus.CREATED);
             }
             return new ResponseEntity<>("Не смог получить документ", HttpStatus.NOT_FOUND);
@@ -55,9 +66,9 @@ public class CardHandlerController {
             Optional<Card> card = cardService.getCardByCardId(cardId);
             if (card.isPresent()) {
                 Optional<DocumentResponseDto> documentResponseDto = apiCallResponse.createDocument(card.get().getUserId(),
-                        "user FIO",
-                        card.get().getContractName(),
-                        "CARD_CLOSE"
+                        card.get().getPlasticName(),
+                        card.get().getPan(),
+                        "CARD_CLOSED"
                 );
                 if (documentResponseDto.isPresent()) {
                      cardService.closeCard(cardId, documentResponseDto.get().getId());

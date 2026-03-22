@@ -8,6 +8,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import ru.kpfu.itis.dto.DocumentRequestDto;
 import ru.kpfu.itis.dto.DocumentResponseDto;
+import ru.kpfu.itis.dto.UserResponseDto;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -19,7 +20,8 @@ public class ApiCallResponse {
 
     private final RestTemplate restTemplate;
 
-    private static final String API_GET_DOCUMENT = "http://185.221.160.131/api/documents";
+    private static final String API_DOCUMENT = "http://185.221.160.131/api/documents";
+    private static final String API_USER = "http://localhost/api/v1/users/";
 
     public Optional<DocumentResponseDto> createDocument(UUID userId, String userFio, String cardNumber, String type) {
         try {
@@ -32,7 +34,7 @@ public class ApiCallResponse {
             log.info("Отправляем запрос во внешний API: userId={}, userFio={}, cardNumber={}, type={}",
                     userId, userFio, cardNumber, type);
 
-            ResponseEntity<DocumentResponseDto> response = restTemplate.postForEntity(API_GET_DOCUMENT, document, DocumentResponseDto.class);
+            ResponseEntity<DocumentResponseDto> response = restTemplate.postForEntity(API_DOCUMENT, document, DocumentResponseDto.class);
 
             log.info("Ответ от внешнего API: status={}", response.getStatusCode());
 
@@ -47,8 +49,22 @@ public class ApiCallResponse {
             log.info("Не получилось достать документ: {}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
-
-
-
     }
+
+    public Optional<UserResponseDto> getUser(UUID userId) {
+        try {
+            ResponseEntity<UserResponseDto> response = restTemplate.getForEntity(API_USER, UserResponseDto.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return Optional.ofNullable(response.getBody());
+            }
+            return Optional.empty();
+        } catch (HttpClientErrorException e) {
+            log.info("Документ не найден. Status: {}, Body: {}", e.getStatusCode(), e.getResponseBodyAsString());
+            return Optional.empty();
+        } catch (Exception e) {
+            log.info("Не получилось достать документ: {}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
 }

@@ -45,8 +45,11 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardDto saveCard(Card card, UUID documentOpenDto) {
-        card.setPlasticName(String.valueOf(ThreadLocalRandom.current().nextLong(1000000000000000L, 9999999999999999L)));
+    public CardDto saveCard(Card card, UUID documentOpenDto, String pan, String fio) {
+        card.setPan(pan);
+
+        card.setPlasticName(fio);
+        card.setContractName(String.valueOf(random.nextInt(100000, 1000000)));
 
         LocalDate expDate = LocalDate.now().plusYears(10);
         card.setExpDate(String.valueOf(expDate));
@@ -112,5 +115,10 @@ public class CardServiceImpl implements CardService {
         } else {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public String createPan() {
+        return String.valueOf(ThreadLocalRandom.current().nextLong(1000000000000000L, 9999999999999999L));
     }
 }
