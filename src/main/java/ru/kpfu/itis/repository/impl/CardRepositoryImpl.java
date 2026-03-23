@@ -29,8 +29,8 @@ public class CardRepositoryImpl implements CardRepository {
     private static final String SQL_ALL_CARD_PRODUCT = "select * from card_product";
     private static final String SQL_SAVE_CARD = """
             insert into card 
-            (user_id, card_product_id, plastic_name, exp_date, cvv, contract_name, pan, open_document, close_document, image_link)
-            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (user_id, card_product_id, plastic_name, exp_date, cvv, contract_name, pan, open_document, close_document)
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
     private static final String SQL_UPDATE_DATE_EXPENSE = "update card set close_flag = true, close_document = ? where id = ?";
     private static final String SQL_GET_ALL_CARDS_OF_USER = "select * from card where user_id = ?";
@@ -70,7 +70,6 @@ public class CardRepositoryImpl implements CardRepository {
             ps.setString(7, card.getPan());
             ps.setObject(8, card.getOpenDocumentId());
             ps.setObject(9, card.getCloseDocumentId());
-            ps.setString(10, card.getImageLink());
             return ps;
         }, keyHolder);
         UUID cardId = (UUID) keyHolder.getKeys().get("id");
@@ -136,7 +135,6 @@ public class CardRepositoryImpl implements CardRepository {
                     .closeDocumentId(rs.getString("close_document") != null ?
                             UUID.fromString(rs.getString("close_document")) : null)
                     .closeFlag(rs.getBoolean("close_flag"))
-                    .imageLink(rs.getString("image_link"))
                     .build();
         }
     }

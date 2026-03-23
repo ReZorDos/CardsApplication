@@ -27,7 +27,6 @@ public class CardMapper {
         return Card.builder()
                 .userId(createCardRequest.getUserId())
                 .cardProductId(createCardRequest.getCardProductId())
-                .imageLink(createCardRequest.getImageLink())
                 .build();
     }
 

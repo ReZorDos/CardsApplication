@@ -24,7 +24,6 @@ public class Card {
     private UUID openDocumentId;
     private UUID closeDocumentId;
     private boolean closeFlag;
-    private String imageLink;
 
 }
 

@@ -46,8 +46,8 @@ public class CardHandlerController {
                     "CARD_OPENED"
             );
             if (documentResponseDto.isPresent()) {
-                cardService.saveCard(card, documentResponseDto.get().getId(), pan, user.get().getFio());
-                return new ResponseEntity<>(HttpStatus.CREATED);
+                CardDto cardResult = cardService.saveCard(card, documentResponseDto.get().getId(), pan, user.get().getFio());
+                return new ResponseEntity<>(cardResult, HttpStatus.CREATED);
             }
             return new ResponseEntity<>("Не смог получить документ", HttpStatus.NOT_FOUND);
 
@@ -56,7 +56,7 @@ public class CardHandlerController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.error("Неожиданная ошибка: {}", e.getMessage(), e);
-            return new ResponseEntity<>("Внутренняя ошибка сервера", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Bratan Ya Ne Znay chto y teby tam", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

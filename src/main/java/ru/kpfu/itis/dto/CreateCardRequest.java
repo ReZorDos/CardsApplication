@@ -15,6 +15,5 @@ public class CreateCardRequest {
 
     private UUID userId;
     private UUID cardProductId;
-    private String imageLink;
 
 }

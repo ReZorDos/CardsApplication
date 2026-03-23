@@ -16,6 +16,5 @@ create table card (
     pan varchar(255) unique,
     open_document varchar(255),
     close_document varchar(255),
-    close_flag boolean default false,
-    image_link varchar(255)
+    close_flag boolean default false
 );
