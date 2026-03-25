@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.kpfu.itis.dto.CardDto;
-import ru.kpfu.itis.dto.CreateCardRequest;
-import ru.kpfu.itis.dto.DocumentResponseDto;
-import ru.kpfu.itis.dto.UserResponseDto;
+import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.service.CardService;
 import ru.kpfu.itis.service.MockService;
@@ -26,15 +23,11 @@ public class CardHandlerController {
     private final CardService cardService;
     private final ApiCallResponse apiCallResponse;
 
-    //TODO: удалить после подсоединения юзера
-    private final MockService mockService;
-
     @PostMapping
     public ResponseEntity<?> createCard(@RequestBody CreateCardRequest createCardRequest) {
         try {
             Card card = cardService.convertCreateRequestToCardEntity(createCardRequest);
-            //Optional<UserResponseDto> user = apiCallResponse.getUser(card.getUserId());
-            Optional<UserResponseDto> user = mockService.getUser();
+            Optional<UserResponseDto> user = apiCallResponse.getUser(card.getUserId());
             if (user.isEmpty()) {
                 return new ResponseEntity<>("NO SUCH USER", HttpStatus.NOT_FOUND);
             }
@@ -45,11 +38,18 @@ public class CardHandlerController {
                     pan,
                     "CARD_OPENED"
             );
-            if (documentResponseDto.isPresent()) {
-                CardDto cardResult = cardService.saveCard(card, documentResponseDto.get().getId(), pan, user.get().getFio());
+            Optional<TransferDto> transferDto = apiCallResponse.getTransfer();
+            if (documentResponseDto.isPresent() && transferDto.isPresent()) {
+                CardDto cardResult = cardService.saveCard(
+                        card,
+                        documentResponseDto.get().getId(),
+                        pan,
+                        user.get().getFio(),
+                        transferDto.get().getContractName()
+                );
                 return new ResponseEntity<>(cardResult, HttpStatus.CREATED);
             }
-            return new ResponseEntity<>("Не смог получить документ", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Не смог получить документ или контракт", HttpStatus.NOT_FOUND);
 
         } catch (IllegalArgumentException e) {
             log.error("Некорректные данные для создания карты: {}", e.getMessage());

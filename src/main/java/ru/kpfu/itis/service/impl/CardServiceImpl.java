@@ -45,20 +45,19 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardDto saveCard(Card card, UUID documentOpenDto, String pan, String fio) {
-        card.setPan(pan);
+    public CardDto saveCard(Card card, UUID documentOpenId, String pan, String fio, String contractName) {
+        Card cardSave = Card.builder()
+                .pan(pan)
+                .contractName(contractName)
+                .expDate(String.valueOf(LocalDate.now().plusYears(10)))
+                .cardProductId(card.getCardProductId())
+                .userId(card.getUserId())
+                .cvv(random.nextInt(900) + 100)
+                .plasticName(fio)
+                .openDocumentId(documentOpenId)
+                .build();
 
-        card.setPlasticName(fio);
-        card.setContractName(String.valueOf(random.nextInt(100000, 1000000)));
-
-        LocalDate expDate = LocalDate.now().plusYears(10);
-        card.setExpDate(String.valueOf(expDate));
-
-        card.setCvv(random.nextInt(900) + 100);
-
-        card.setOpenDocumentId(documentOpenDto);
-
-        Card cardResponse = cardRepository.saveCardOfUser(card);
+        Card cardResponse = cardRepository.saveCardOfUser(cardSave);
         CardProduct cardProduct = cardRepository.findCardProductById(card.getCardProductId())
                 .orElseThrow(() -> new RuntimeException("Card product not found"));
         return cardMapper.toDto(cardResponse, cardProduct);

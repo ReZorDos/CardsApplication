@@ -1,14 +1,11 @@
 <configuration>
-    <!-- Настройка вывода в консоль -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-            <!-- Явно указываем UTF-8 -->
             <charset>UTF-8</charset>
         </encoder>
     </appender>
 
-    <!-- Настройка вывода в файл -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/myapp.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">

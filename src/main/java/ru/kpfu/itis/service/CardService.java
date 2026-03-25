@@ -18,7 +18,7 @@ public interface CardService {
 
     List<CardProduct> getAllCardProduct();
 
-    CardDto saveCard(Card card, UUID documentOpenDto, String pan, String fio);
+    CardDto saveCard(Card card, UUID documentOpenId, String pan, String fio, String contractName);
 
     boolean closeCard(UUID cardId, UUID closeDocumentId);
 

@@ -18,6 +18,7 @@ public class CardMapper {
                 .pan(card.getPan())
                 .expDate(card.getExpDate())
                 .cvv(String.valueOf(card.getCvv()))
+                .openDocumentId(card.getOpenDocumentId())
                 .cardProduct(cardProduct)
                 .closeFlag(card.isCloseFlag())
                 .build();
