@@ -24,30 +24,32 @@ public class ProductController {
     private final CardService cardService;
 
     @GetMapping("/products")
-    public ResponseEntity<List<CardProduct>> getCardsProducts() {
+    public ResponseEntity<?> getCardsProducts() {
         try {
             List<CardProduct> cardProductList = cardService.getAllCardProduct();
             if (!cardProductList.isEmpty()) {
                 return new ResponseEntity<>(cardProductList, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Продуктов нет в базе данных", HttpStatus.NO_CONTENT);
             }
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Ошибка сервера: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity<CardProduct> getCardProduct(@PathVariable("id") UUID id) {
+    public ResponseEntity<?> getCardProduct(@PathVariable("id") UUID id) {
         try {
             Optional<CardProduct> cardProduct = cardService.getCardProductById(id);
-            if(cardProduct.isPresent()) {
+            if (cardProduct.isPresent()) {
                 return new ResponseEntity<>(cardProduct.get(), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>("Некорректные аргументы для получения продукта", HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.INSUFFICIENT_STORAGE);
+            return new ResponseEntity<>("Ошибка сервера: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

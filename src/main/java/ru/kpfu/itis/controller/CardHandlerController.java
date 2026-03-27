@@ -59,10 +59,10 @@ public class CardHandlerController {
 
         } catch (IllegalArgumentException e) {
             log.error("Некорректные данные для создания карты: {}", e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Некорректные данные для создания карты", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.error("Неожиданная ошибка: {}", e.getMessage(), e);
-            return new ResponseEntity<>("Bratan Ya Ne Znay chto y teby tam", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Ошибка сервера: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
