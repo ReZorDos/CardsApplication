@@ -1,4 +1,4 @@
-package ru.kpfu.itis.dto;
+package ru.kpfu.itis.dto.card;
 
 import lombok.*;
 import ru.kpfu.itis.model.CardProduct;

@@ -6,9 +6,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.dto.*;
+import ru.kpfu.itis.dto.card.CardDto;
+import ru.kpfu.itis.dto.card.CreateCardRequest;
+import ru.kpfu.itis.dto.document.DocumentResponseDto;
+import ru.kpfu.itis.dto.transfer.TransferDto;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.service.CardService;
-import ru.kpfu.itis.service.MockService;
 import ru.kpfu.itis.service.impl.ApiCallResponse;
 
 import java.util.Optional;
@@ -28,16 +31,19 @@ public class CardHandlerController {
         try {
             Card card = cardService.convertCreateRequestToCardEntity(createCardRequest);
             Optional<UserResponseDto> user = apiCallResponse.getUser(card.getUserId());
+            log.info("Получил юзера из User Microservice");
             if (user.isEmpty()) {
                 return new ResponseEntity<>("NO SUCH USER", HttpStatus.NOT_FOUND);
             }
             String pan = cardService.createPan();
+            log.info("Создал pan");
             Optional<DocumentResponseDto> documentResponseDto = apiCallResponse.createDocument(
                     card.getUserId(),
                     user.get().getFio(),
                     pan,
                     "CARD_OPENED"
             );
+            log.info("Сходил за документом");
             Optional<TransferDto> transferDto = apiCallResponse.getTransfer();
             if (documentResponseDto.isPresent() && transferDto.isPresent()) {
                 CardDto cardResult = cardService.saveCard(

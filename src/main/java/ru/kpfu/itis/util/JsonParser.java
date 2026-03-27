@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @UtilityClass
+@Deprecated(since = "deleting servlets")
 public class JsonParser {
 
     private ObjectMapper mapper = new ObjectMapper();

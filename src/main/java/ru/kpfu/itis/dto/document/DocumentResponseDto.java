@@ -1,4 +1,4 @@
-package ru.kpfu.itis.dto;
+package ru.kpfu.itis.dto.document;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DocumentRequestDto {
+public class DocumentResponseDto {
 
+    private UUID id;
     private String docType;
     private UUID userId;
+    private String createdDate;
     private String userFio;
     private String cardNumber;
 

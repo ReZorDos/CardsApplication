@@ -2,8 +2,8 @@ package ru.kpfu.itis.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.kpfu.itis.dto.CardDto;
-import ru.kpfu.itis.dto.CreateCardRequest;
+import ru.kpfu.itis.dto.card.CardDto;
+import ru.kpfu.itis.dto.card.CreateCardRequest;
 import ru.kpfu.itis.mapper.CardMapper;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.model.CardProduct;

@@ -1,8 +1,7 @@
 package ru.kpfu.itis.service;
 
-import ru.kpfu.itis.dto.CardDto;
-import ru.kpfu.itis.dto.CreateCardRequest;
-import ru.kpfu.itis.dto.DocumentResponseDto;
+import ru.kpfu.itis.dto.card.CardDto;
+import ru.kpfu.itis.dto.card.CreateCardRequest;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.model.CardProduct;
 

@@ -6,9 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import ru.kpfu.itis.dto.DocumentRequestDto;
-import ru.kpfu.itis.dto.DocumentResponseDto;
-import ru.kpfu.itis.dto.TransferDto;
+import ru.kpfu.itis.dto.document.DocumentRequestDto;
+import ru.kpfu.itis.dto.document.DocumentResponseDto;
+import ru.kpfu.itis.dto.transfer.TransactionDto;
+import ru.kpfu.itis.dto.transfer.TransactionsUserDto;
+import ru.kpfu.itis.dto.transfer.TransferDto;
 import ru.kpfu.itis.dto.UserResponseDto;
 import ru.kpfu.itis.util.PropertyReader;
 
@@ -73,7 +75,7 @@ public class ApiCallResponse {
     public Optional<TransferDto> getTransfer() {
         try {
             log.info("Отправляем запрос во внешний API: transfer");
-            ResponseEntity<TransferDto> transfer = restTemplate.postForEntity(API_TRANSFERS, null, TransferDto.class);
+            ResponseEntity<TransferDto> transfer = restTemplate.postForEntity(API_TRANSFERS + "contract", null, TransferDto.class);
             if (transfer.getStatusCode().is2xxSuccessful()) {
                 return Optional.ofNullable(transfer.getBody());
             }
@@ -86,5 +88,23 @@ public class ApiCallResponse {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+    public Optional<TransactionsUserDto> getTransactionsOfUser(UUID name) {
+        String url = new StringBuilder().append(API_TRANSFERS).append("/transactions/").append(name).toString();
+        try {
+            ResponseEntity<TransactionsUserDto> transaction = restTemplate.getForEntity(url, TransactionsUserDto.class);
+            if (transaction.getStatusCode().is2xxSuccessful()) {
+                return Optional.ofNullable(transaction.getBody());
+            }
+            return Optional.empty();
+        } catch (HttpClientErrorException e) {
+            log.info("Тарнзакции не найдены. Status: {}, Body: {}", e.getStatusCode(), e.getResponseBodyAsString());
+            return Optional.empty();
+        } catch (Exception e) {
+            log.info("Не получилось достать транзакции: {}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
 
 }

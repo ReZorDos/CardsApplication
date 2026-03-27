@@ -1,8 +1,8 @@
 package ru.kpfu.itis.mapper;
 
 import org.springframework.stereotype.Component;
-import ru.kpfu.itis.dto.CardDto;
-import ru.kpfu.itis.dto.CreateCardRequest;
+import ru.kpfu.itis.dto.card.CardDto;
+import ru.kpfu.itis.dto.card.CreateCardRequest;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.model.CardProduct;
 
@@ -19,6 +19,7 @@ public class CardMapper {
                 .expDate(card.getExpDate())
                 .cvv(String.valueOf(card.getCvv()))
                 .openDocumentId(card.getOpenDocumentId())
+                .closeDocumentId(card.getCloseDocumentId())
                 .cardProduct(cardProduct)
                 .closeFlag(card.isCloseFlag())
                 .build();

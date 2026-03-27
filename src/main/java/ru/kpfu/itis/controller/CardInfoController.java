@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kpfu.itis.dto.CardDto;
+import ru.kpfu.itis.dto.card.CardDto;
 import ru.kpfu.itis.service.CardService;
 
 import java.util.List;

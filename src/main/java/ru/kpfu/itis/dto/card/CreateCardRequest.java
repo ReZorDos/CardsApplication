@@ -1,4 +1,4 @@
-package ru.kpfu.itis.dto;
+package ru.kpfu.itis.dto.card;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
