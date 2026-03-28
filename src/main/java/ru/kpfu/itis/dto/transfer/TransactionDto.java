@@ -15,5 +15,6 @@ public class TransactionDto {
     private String targetContractId;
     private String amount;
     private String description;
+    private String createdAt;
 
 }

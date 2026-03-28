@@ -1,19 +1,16 @@
 package ru.kpfu.itis.controller;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.kpfu.itis.dto.transfer.TransactionRequest;
+import ru.kpfu.itis.dto.card.CardDto;
 import ru.kpfu.itis.dto.transfer.TransactionsUserDto;
-import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.service.CardService;
 import ru.kpfu.itis.service.impl.ApiCallResponse;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v2/cards")
@@ -25,14 +22,16 @@ public class TransactionInfoController {
     private final CardService cardService;
 
     @GetMapping("/statement/{cardId}")
-    public ResponseEntity<?> getTransactions(@RequestBody TransactionRequest transactionRequest,
-                                             @PathVariable("cardId") UUID cardId) {
+    public ResponseEntity<?> getTransactions(@PathVariable("cardId") String cardId,
+                                             @RequestParam("from") String from,
+                                             @RequestParam("to") String to) {
         try {
-            Optional<Card> card = cardService.getCardByCardId(cardId);
+            Optional<CardDto> card = cardService.getCardByContractId(cardId);
             if (card.isPresent()) {
-                Optional<TransactionsUserDto> transaction = apiCallResponse.getTransactionsOfUser(card.get().getId());
+                Optional<TransactionsUserDto> transaction = apiCallResponse.getTransactionsOfUser(card.get().getContractName());
                 if (transaction.isPresent()) {
-                    return new ResponseEntity<>(transaction.get(), HttpStatus.OK);
+                    TransactionsUserDto transactionsUser = cardService.filterTransactionsByDate(transaction.get(), from, to);
+                    return new ResponseEntity<>(transactionsUser, HttpStatus.OK);
                 }
                 return new ResponseEntity<>("Не получилось достать транзакции", HttpStatus.NO_CONTENT);
             }

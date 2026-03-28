@@ -2,6 +2,7 @@ package ru.kpfu.itis.service;
 
 import ru.kpfu.itis.dto.card.CardDto;
 import ru.kpfu.itis.dto.card.CreateCardRequest;
+import ru.kpfu.itis.dto.transfer.TransactionsUserDto;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.model.CardProduct;
 
@@ -32,4 +33,6 @@ public interface CardService {
     Optional<CardDto> getCardByContractId(String contractId);
 
     String createPan();
+
+    TransactionsUserDto filterTransactionsByDate(TransactionsUserDto transactionsUser, String from, String to);
 }

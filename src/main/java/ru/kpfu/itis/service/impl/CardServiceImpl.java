@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.kpfu.itis.dto.card.CardDto;
 import ru.kpfu.itis.dto.card.CreateCardRequest;
+import ru.kpfu.itis.dto.transfer.TransactionsUserDto;
 import ru.kpfu.itis.mapper.CardMapper;
 import ru.kpfu.itis.model.Card;
 import ru.kpfu.itis.model.CardProduct;
 import ru.kpfu.itis.repository.CardRepository;
 import ru.kpfu.itis.service.CardService;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -120,4 +122,20 @@ public class CardServiceImpl implements CardService {
     public String createPan() {
         return String.valueOf(ThreadLocalRandom.current().nextLong(1000000000000000L, 9999999999999999L));
     }
+
+    @Override
+    public TransactionsUserDto filterTransactionsByDate(TransactionsUserDto transactionsUser, String from, String to) {
+        Instant fromDate = Instant.parse(from);
+        Instant toDate = Instant.parse(to);
+
+        transactionsUser.setFrom(from);
+        transactionsUser.setTo(to);
+        transactionsUser.setTransactions(transactionsUser.getTransactions().stream()
+                .filter(e -> !Instant.parse(e.getCreatedAt()).isBefore(fromDate)
+                        && !Instant.parse(e.getCreatedAt()).isAfter(toDate))
+                .toList());
+
+        return transactionsUser;
+    }
+
 }

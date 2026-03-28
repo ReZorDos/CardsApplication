@@ -8,7 +8,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import ru.kpfu.itis.dto.document.DocumentRequestDto;
 import ru.kpfu.itis.dto.document.DocumentResponseDto;
-import ru.kpfu.itis.dto.transfer.TransactionDto;
 import ru.kpfu.itis.dto.transfer.TransactionsUserDto;
 import ru.kpfu.itis.dto.transfer.TransferDto;
 import ru.kpfu.itis.dto.UserResponseDto;
@@ -89,7 +88,7 @@ public class ApiCallResponse {
         }
     }
 
-    public Optional<TransactionsUserDto> getTransactionsOfUser(UUID name) {
+    public Optional<TransactionsUserDto> getTransactionsOfUser(String name) {
         String url = new StringBuilder().append(API_TRANSFERS).append("/transactions/").append(name).toString();
         try {
             ResponseEntity<TransactionsUserDto> transaction = restTemplate.getForEntity(url, TransactionsUserDto.class);
