@@ -55,14 +55,14 @@ public class CardHandlerController {
                 );
                 return new ResponseEntity<>(cardResult, HttpStatus.CREATED);
             }
-            return new ResponseEntity<>("Не смог получить документ или контракт", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Unable to obtain document or contract", HttpStatus.NOT_FOUND);
 
         } catch (IllegalArgumentException e) {
             log.error("Некорректные данные для создания карты: {}", e.getMessage());
-            return new ResponseEntity<>("Некорректные данные для создания карты", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Incorrect data for map creation", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.error("Неожиданная ошибка: {}", e.getMessage(), e);
-            return new ResponseEntity<>("Ошибка сервера: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Server error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -80,17 +80,17 @@ public class CardHandlerController {
                      cardService.closeCard(cardId, documentResponseDto.get().getId());
                      return new ResponseEntity<>(HttpStatus.OK);
                 } else {
-                    return new ResponseEntity<>("Не получилось достать документ", HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>("I couldn't get the document", HttpStatus.NOT_FOUND);
                 }
             } else {
-                return new ResponseEntity<>("Нет такой карты", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("No such card", HttpStatus.NOT_FOUND);
             }
         } catch (IllegalArgumentException e) {
             log.error("Некорректные данные для создания карты: {}", e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.error("Неожиданная ошибка: {}", e.getMessage(), e);
-            return new ResponseEntity<>("Внутренняя ошибка сервера", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

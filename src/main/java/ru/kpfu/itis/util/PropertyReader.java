@@ -2,26 +2,35 @@ package ru.kpfu.itis.util;
 
 import lombok.experimental.UtilityClass;
 
-import java.io.IOException;
-import java.util.Properties;
-
 @UtilityClass
 public class PropertyReader {
 
-    private final Properties properties;
+    public static String getProperties(String key) {
+        String value = System.getenv(key);
 
-    static {
-        properties = new Properties();
-        try {
-            properties.load(PropertyReader.class
-                    .getClassLoader()
-                    .getResourceAsStream("app.properties"));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load app.properties", e);
+        if (value == null || value.isEmpty()) {
+            switch (key) {
+                case "DB_URL":
+                    value = "jdbc:postgresql://postgres:5432/card-application-oris";
+                    break;
+                case "DB_USER":
+                    value = "card-application";
+                    break;
+                case "DB_PASSWORD":
+                    value = "123456";
+                    break;
+                case "API.DOCUMENTS":
+                    value = "http://185.221.160.131/api/documents";
+                    break;
+                case "API.USERS":
+                    value = "http://104.128.137.40/api/v1/users/";
+                    break;
+                case "API.TRANSFERS":
+                    value = "http://26.122.215.84:8083/api/v1/transfers/";
+                    break;
+            }
         }
-    }
 
-    public String getProperties(String key) {
-        return properties.getProperty(key);
+        return value;
     }
 }

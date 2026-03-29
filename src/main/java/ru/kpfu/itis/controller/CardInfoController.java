@@ -33,10 +33,10 @@ public class CardInfoController {
             return ResponseEntity.ok(cardDto.get());
         } catch (IllegalArgumentException e) {
             log.error("Некорректные данные для получения карты: {}", e.getMessage());
-            return new ResponseEntity<>("Некорректные данные для получения карты", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Incorrect data for obtaining a card", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.error("Неожиданная ошибка: {}", e.getMessage());
-            return new ResponseEntity<>("Ошибка сервера:" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Server error:" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -50,10 +50,10 @@ public class CardInfoController {
             return ResponseEntity.ok(cardDtoList);
         } catch (IllegalArgumentException e) {
             log.error("Некорректные данные для получения карты: {}", e.getMessage());
-            return new ResponseEntity<>("Некорректные данные для получения карты", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Incorrect data for obtaining a card", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.error("Неожиданная ошибка: {}", e.getMessage());
-            return new ResponseEntity<>("Ошибка сервера: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Server error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -67,10 +67,10 @@ public class CardInfoController {
             return ResponseEntity.ok(card.get());
         } catch (IllegalArgumentException e) {
             log.error("Некорректные данные для получения карты: {}", e.getMessage());
-            return new ResponseEntity<>("Некорректные данные для получения карты", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Incorrect data for obtaining a card", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.error("Неожиданная ошибка: {}", e.getMessage());
-            return new ResponseEntity<>("Ошибка сервера: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Server error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -84,10 +84,10 @@ public class CardInfoController {
             return ResponseEntity.ok(card.get());
         } catch (IllegalArgumentException e) {
             log.error("Некорректные данные для получения карты: {}", e.getMessage());
-            return new ResponseEntity<>("Некорректные данные для получения карты", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Incorrect data for obtaining a card", HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.error("Неожиданная ошибка: {}", e.getMessage());
-            return new ResponseEntity<>("Ошибка сервера: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Server error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

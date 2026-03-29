@@ -33,15 +33,15 @@ public class TransactionInfoController {
                     TransactionsUserDto transactionsUser = cardService.filterTransactionsByDate(transaction.get(), from, to);
                     return new ResponseEntity<>(transactionsUser, HttpStatus.OK);
                 }
-                return new ResponseEntity<>("Не получилось достать транзакции", HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>("Unable to retrieve transactions", HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>("Нет такого пользователя", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No such user", HttpStatus.NOT_FOUND);
         } catch (IllegalArgumentException e) {
             log.error("Некорректные данные для получения транзакций: {}", e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             log.error("Неожиданная ошибка: {}", e.getMessage(), e);
-            return new ResponseEntity<>("Ошибка сервера: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Server error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

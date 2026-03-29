@@ -30,10 +30,10 @@ public class ProductController {
             if (!cardProductList.isEmpty()) {
                 return new ResponseEntity<>(cardProductList, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>("Продуктов нет в базе данных", HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>("No products in the database.", HttpStatus.NO_CONTENT);
             }
         } catch (RuntimeException e) {
-            return new ResponseEntity<>("Ошибка сервера: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Server error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -47,9 +47,9 @@ public class ProductController {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>("Некорректные аргументы для получения продукта", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Incorrect arguments for obtaining the product", HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>("Ошибка сервера: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Server error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

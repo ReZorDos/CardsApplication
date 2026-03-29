@@ -18,3 +18,20 @@ create table card (
     close_document varchar(255),
     close_flag boolean default false
 );
+
+INSERT INTO card_product (card_name, description, card_image_link) VALUES
+    (
+       'Master Hasler Card',
+       'Карта с повышенным кэшбэком на путешествия и доступом в бизнес-залы.',
+       'https://i.ibb.co/Pbg6Vy0/photo.jpg'
+    ),
+    (
+       'Java Back Card',
+       'Для самых тестостероновых программистов',
+       'https://i.ibb.co/Ld2gFqsQ/photo.jpg'
+    ),
+    (
+       'Student Card',
+       'Бесплатное обслуживание и специальные бонусы на посещение преподского лифта',
+       'https://i.ibb.co/xqQ920Vx/photo.jpg'
+    );

@@ -108,7 +108,7 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
-# Application properties
-src/main/resources/app.properties
+# env files
+.env
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,maven
