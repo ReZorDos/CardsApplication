@@ -2,8 +2,6 @@ package ru.kpfu.itis.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,71 +22,31 @@ public class CardInfoController {
     private final CardService cardService;
 
     @GetMapping("/by-id/{id}")
-    public ResponseEntity<?> getCardInfoByCardId(@PathVariable("id") UUID id) {
-        try {
-            Optional<CardDto> cardDto = cardService.getCardDtoByCardId(id);
-            if (cardDto.isEmpty()) {
-                return new ResponseEntity<>("Карта не найдена в базе данных", HttpStatus.NOT_FOUND);
-            }
-            return ResponseEntity.ok(cardDto.get());
-        } catch (IllegalArgumentException e) {
-            log.error("Некорректные данные для получения карты: {}", e.getMessage());
-            return new ResponseEntity<>("Incorrect data for obtaining a card", HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            log.error("Неожиданная ошибка: {}", e.getMessage());
-            return new ResponseEntity<>("Server error:" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public CardDto getCardInfoByCardId(@PathVariable("id") UUID id) {
+        Optional<CardDto> cardDto = cardService.getCardDtoByCardId(id);
+        log.info("Получил карту по id: {}", id);
+        return cardDto.get();
     }
 
     @GetMapping("/by-user/{userId}")
-    public ResponseEntity<?> getCardsInfoByUserId(@PathVariable("userId") UUID userId) {
-        try {
-            List<CardDto> cardDtoList = cardService.getAllCardsOfUser(userId);
-            if (cardDtoList.isEmpty()) {
-                return ResponseEntity.ok(List.of());
-            }
-            return ResponseEntity.ok(cardDtoList);
-        } catch (IllegalArgumentException e) {
-            log.error("Некорректные данные для получения карты: {}", e.getMessage());
-            return new ResponseEntity<>("Incorrect data for obtaining a card", HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            log.error("Неожиданная ошибка: {}", e.getMessage());
-            return new ResponseEntity<>("Server error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public List<CardDto> getCardsInfoByUserId(@PathVariable("userId") UUID userId) {
+        List<CardDto> cardDtoList = cardService.getAllCardsOfUser(userId);
+        log.info("Получил карту по userId: {}", userId);
+        return cardDtoList;
     }
 
     @GetMapping("/by-pan/{panId}")
-    public ResponseEntity<?> getCardsInfoByUserId(@PathVariable("panId") String panId) {
-        try {
-            Optional<CardDto> card = cardService.getCardByPan(panId);
-            if (card.isEmpty()) {
-                return new ResponseEntity<>("Карта не найдена в базе данных", HttpStatus.NOT_FOUND);
-            }
-            return ResponseEntity.ok(card.get());
-        } catch (IllegalArgumentException e) {
-            log.error("Некорректные данные для получения карты: {}", e.getMessage());
-            return new ResponseEntity<>("Incorrect data for obtaining a card", HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            log.error("Неожиданная ошибка: {}", e.getMessage());
-            return new ResponseEntity<>("Server error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public CardDto getCardsInfoByUserId(@PathVariable("panId") String panId) {
+        Optional<CardDto> card = cardService.getCardByPan(panId);
+        log.info("Получил карту по pan: {}", panId);
+        return card.get();
     }
 
     @GetMapping("/by-contract/{contractId}")
-    public ResponseEntity<?> getCardInfoByContractId(@PathVariable("contractId") String contractId) {
-        try {
-            Optional<CardDto> card = cardService.getCardByContractId(contractId);
-            if (card.isEmpty()) {
-                return new ResponseEntity<>("Карта не найдена в базе данных", HttpStatus.NOT_FOUND);
-            }
-            return ResponseEntity.ok(card.get());
-        } catch (IllegalArgumentException e) {
-            log.error("Некорректные данные для получения карты: {}", e.getMessage());
-            return new ResponseEntity<>("Incorrect data for obtaining a card", HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            log.error("Неожиданная ошибка: {}", e.getMessage());
-            return new ResponseEntity<>("Server error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public CardDto getCardInfoByContractId(@PathVariable("contractId") String contractId) {
+        Optional<CardDto> card = cardService.getCardByContractId(contractId);
+        log.info("Получил карту по contractId: {}", contractId);
+        return card.get();
     }
 
 }

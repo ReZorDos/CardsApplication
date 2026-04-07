@@ -2,8 +2,6 @@ package ru.kpfu.itis.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kpfu.itis.dto.*;
 import ru.kpfu.itis.dto.card.CardDto;
@@ -27,71 +25,38 @@ public class CardHandlerController {
     private final ApiCallResponse apiCallResponse;
 
     @PostMapping
-    public ResponseEntity<?> createCard(@RequestBody CreateCardRequest createCardRequest) {
-        try {
-            Card card = cardService.convertCreateRequestToCardEntity(createCardRequest);
-            Optional<UserResponseDto> user = apiCallResponse.getUser(card.getUserId());
-            log.info("Получил юзера из User Microservice");
-            if (user.isEmpty()) {
-                return new ResponseEntity<>("NO SUCH USER", HttpStatus.NOT_FOUND);
-            }
-            String pan = cardService.createPan();
-            log.info("Создал pan");
-            Optional<DocumentResponseDto> documentResponseDto = apiCallResponse.createDocument(
-                    card.getUserId(),
-                    user.get().getFio(),
-                    pan,
-                    "CARD_OPENED"
-            );
-            log.info("Сходил за документом");
-            Optional<TransferDto> transferDto = apiCallResponse.getTransfer();
-            if (documentResponseDto.isPresent() && transferDto.isPresent()) {
-                CardDto cardResult = cardService.saveCard(
-                        card,
-                        documentResponseDto.get().getId(),
-                        pan,
-                        user.get().getFio(),
-                        transferDto.get().getContractName()
-                );
-                return new ResponseEntity<>(cardResult, HttpStatus.CREATED);
-            }
-            return new ResponseEntity<>("Unable to obtain document or contract", HttpStatus.NOT_FOUND);
-
-        } catch (IllegalArgumentException e) {
-            log.error("Некорректные данные для создания карты: {}", e.getMessage());
-            return new ResponseEntity<>("Incorrect data for map creation", HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            log.error("Неожиданная ошибка: {}", e.getMessage(), e);
-            return new ResponseEntity<>("Server error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public CardDto createCard(@RequestBody CreateCardRequest createCardRequest) {
+        Card card = cardService.convertCreateRequestToCardEntity(createCardRequest);
+        Optional<UserResponseDto> user = apiCallResponse.getUser(card.getUserId());
+        log.info("Получил юзера из User Microservice");
+        String pan = cardService.createPan();
+        log.info("Создал pan");
+        Optional<DocumentResponseDto> documentResponseDto = apiCallResponse.createDocument(
+                card.getUserId(),
+                user.get().getFio(),
+                pan,
+                "CARD_OPENED"
+        );
+        log.info("Сходил за документом");
+        Optional<TransferDto> transferDto = apiCallResponse.getTransfer();
+        return cardService.saveCard(
+                card,
+                documentResponseDto.get().getId(),
+                pan,
+                user.get().getFio(),
+                transferDto.get().getContractName()
+        );
     }
 
     @DeleteMapping("/{cardId}")
-    public ResponseEntity<?> closeCard(@PathVariable("cardId") UUID cardId) {
-        try {
-            Optional<Card> card = cardService.getCardByCardId(cardId);
-            if (card.isPresent()) {
-                Optional<DocumentResponseDto> documentResponseDto = apiCallResponse.createDocument(card.get().getUserId(),
-                        card.get().getPlasticName(),
-                        card.get().getPan(),
-                        "CARD_CLOSED"
-                );
-                if (documentResponseDto.isPresent()) {
-                     cardService.closeCard(cardId, documentResponseDto.get().getId());
-                     return new ResponseEntity<>(HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>("I couldn't get the document", HttpStatus.NOT_FOUND);
-                }
-            } else {
-                return new ResponseEntity<>("No such card", HttpStatus.NOT_FOUND);
-            }
-        } catch (IllegalArgumentException e) {
-            log.error("Некорректные данные для создания карты: {}", e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            log.error("Неожиданная ошибка: {}", e.getMessage(), e);
-            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public void closeCard(@PathVariable("cardId") UUID cardId) {
+        Optional<Card> card = cardService.getCardByCardId(cardId);
+        Optional<DocumentResponseDto> documentResponseDto = apiCallResponse.createDocument(card.get().getUserId(),
+            card.get().getPlasticName(),
+            card.get().getPan(),
+            "CARD_CLOSED"
+        );
+        cardService.closeCard(cardId, documentResponseDto.get().getId());
     }
 
 }
